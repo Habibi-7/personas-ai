@@ -1,0 +1,1563 @@
+[
+  {
+    "slug": "ace",
+    "title": "Billionaires Build",
+    "url": "https://www.paulgraham.com/ace.html",
+    "chunks": 4,
+    "file": "ace.md"
+  },
+  {
+    "slug": "addiction",
+    "title": "The Acceleration of Addictiveness",
+    "url": "https://www.paulgraham.com/addiction.html",
+    "chunks": 1,
+    "file": "addiction.md"
+  },
+  {
+    "slug": "airbnb",
+    "title": "Subject: Airbnb",
+    "url": "https://www.paulgraham.com/airbnb.html",
+    "chunks": 8,
+    "file": "airbnb.md"
+  },
+  {
+    "slug": "airbnbs",
+    "title": "The Airbnbs",
+    "url": "https://www.paulgraham.com/airbnbs.html",
+    "chunks": 6,
+    "file": "airbnbs.md"
+  },
+  {
+    "slug": "alien",
+    "title": "Alien Truth",
+    "url": "https://www.paulgraham.com/alien.html",
+    "chunks": 4,
+    "file": "alien.md"
+  },
+  {
+    "slug": "altair",
+    "title": "What Microsoft Is this the Altair Basic of?",
+    "url": "https://www.paulgraham.com/altair.html",
+    "chunks": 2,
+    "file": "altair.md"
+  },
+  {
+    "slug": "ambitious",
+    "title": "Frighteningly Ambitious Startup Ideas",
+    "url": "https://www.paulgraham.com/ambitious.html",
+    "chunks": 21,
+    "file": "ambitious.md"
+  },
+  {
+    "slug": "america",
+    "title": "Why Startups Condense in America",
+    "url": "https://www.paulgraham.com/america.html",
+    "chunks": 3,
+    "file": "america.md"
+  },
+  {
+    "slug": "angelinvesting",
+    "title": "How to Be an Angel Investor",
+    "url": "https://www.paulgraham.com/angelinvesting.html",
+    "chunks": 1,
+    "file": "angelinvesting.md"
+  },
+  {
+    "slug": "aord",
+    "title": "Default Alive or Default Dead?",
+    "url": "https://www.paulgraham.com/aord.html",
+    "chunks": 3,
+    "file": "aord.md"
+  },
+  {
+    "slug": "apple",
+    "title": "Apple's Mistake",
+    "url": "https://www.paulgraham.com/apple.html",
+    "chunks": 12,
+    "file": "apple.md"
+  },
+  {
+    "slug": "artistsship",
+    "title": "The Other Half of \"Artists Ship\"",
+    "url": "https://www.paulgraham.com/artistsship.html",
+    "chunks": 8,
+    "file": "artistsship.md"
+  },
+  {
+    "slug": "avg",
+    "title": "Beating the Averages",
+    "url": "https://www.paulgraham.com/avg.html",
+    "chunks": 25,
+    "file": "avg.md"
+  },
+  {
+    "slug": "badeconomy",
+    "title": "Why to Start a Startup in a Bad Economy",
+    "url": "https://www.paulgraham.com/badeconomy.html",
+    "chunks": 7,
+    "file": "badeconomy.md"
+  },
+  {
+    "slug": "before",
+    "title": "Before the Startup",
+    "url": "https://www.paulgraham.com/before.html",
+    "chunks": 26,
+    "file": "before.md"
+  },
+  {
+    "slug": "best",
+    "title": "The Best Essay",
+    "url": "https://www.paulgraham.com/best.html",
+    "chunks": 1,
+    "file": "best.md"
+  },
+  {
+    "slug": "better",
+    "title": "Better Bayesian Filtering",
+    "url": "https://www.paulgraham.com/better.html",
+    "chunks": 6,
+    "file": "better.md"
+  },
+  {
+    "slug": "bias",
+    "title": "A Way to Detect Bias",
+    "url": "https://www.paulgraham.com/bias.html",
+    "chunks": 1,
+    "file": "bias.md"
+  },
+  {
+    "slug": "boss",
+    "title": "You Weren't Meant to Have a Boss",
+    "url": "https://www.paulgraham.com/boss.html",
+    "chunks": 14,
+    "file": "boss.md"
+  },
+  {
+    "slug": "brandage",
+    "title": "The Brand Age",
+    "url": "https://www.paulgraham.com/brandage.html",
+    "chunks": 1,
+    "file": "brandage.md"
+  },
+  {
+    "slug": "bronze",
+    "title": "Why Smart People Have Bad Ideas",
+    "url": "https://www.paulgraham.com/bronze.html",
+    "chunks": 18,
+    "file": "bronze.md"
+  },
+  {
+    "slug": "bubble",
+    "title": "What the Bubble Got Right",
+    "url": "https://www.paulgraham.com/bubble.html",
+    "chunks": 21,
+    "file": "bubble.md"
+  },
+  {
+    "slug": "charisma",
+    "title": "It's Charisma, Stupid",
+    "url": "https://www.paulgraham.com/charisma.html",
+    "chunks": 1,
+    "file": "charisma.md"
+  },
+  {
+    "slug": "cities",
+    "title": "Cities and Ambition",
+    "url": "https://www.paulgraham.com/cities.html",
+    "chunks": 20,
+    "file": "cities.md"
+  },
+  {
+    "slug": "college",
+    "title": "Undergraduation",
+    "url": "https://www.paulgraham.com/college.html",
+    "chunks": 21,
+    "file": "college.md"
+  },
+  {
+    "slug": "colleges",
+    "title": "News from the Front",
+    "url": "https://www.paulgraham.com/colleges.html",
+    "chunks": 3,
+    "file": "colleges.md"
+  },
+  {
+    "slug": "conformism",
+    "title": "The Four Quadrants of Conformism",
+    "url": "https://www.paulgraham.com/conformism.html",
+    "chunks": 1,
+    "file": "conformism.md"
+  },
+  {
+    "slug": "control",
+    "title": "Founder Control",
+    "url": "https://www.paulgraham.com/control.html",
+    "chunks": 5,
+    "file": "control.md"
+  },
+  {
+    "slug": "convergence",
+    "title": "Why TV Lost",
+    "url": "https://www.paulgraham.com/convergence.html",
+    "chunks": 1,
+    "file": "convergence.md"
+  },
+  {
+    "slug": "convince",
+    "title": "How to Convince Investors",
+    "url": "https://www.paulgraham.com/convince.html",
+    "chunks": 21,
+    "file": "convince.md"
+  },
+  {
+    "slug": "copy",
+    "title": "Copy What You Like",
+    "url": "https://www.paulgraham.com/copy.html",
+    "chunks": 6,
+    "file": "copy.md"
+  },
+  {
+    "slug": "corpdev",
+    "title": "Don't Talk to Corp Dev",
+    "url": "https://www.paulgraham.com/corpdev.html",
+    "chunks": 2,
+    "file": "corpdev.md"
+  },
+  {
+    "slug": "cred",
+    "title": "Coronavirus and Credibility",
+    "url": "https://www.paulgraham.com/cred.html",
+    "chunks": 2,
+    "file": "cred.md"
+  },
+  {
+    "slug": "credentials",
+    "title": "After Credentials",
+    "url": "https://www.paulgraham.com/credentials.html",
+    "chunks": 1,
+    "file": "credentials.md"
+  },
+  {
+    "slug": "desres",
+    "title": "Design and Research",
+    "url": "https://www.paulgraham.com/desres.html",
+    "chunks": 15,
+    "file": "desres.md"
+  },
+  {
+    "slug": "determination",
+    "title": "The Anatomy of Determination",
+    "url": "https://www.paulgraham.com/determination.html",
+    "chunks": 9,
+    "file": "determination.md"
+  },
+  {
+    "slug": "die",
+    "title": "How Not to Die",
+    "url": "https://www.paulgraham.com/die.html",
+    "chunks": 11,
+    "file": "die.md"
+  },
+  {
+    "slug": "diff",
+    "title": "What Made Lisp Different",
+    "url": "https://www.paulgraham.com/diff.html",
+    "chunks": 4,
+    "file": "diff.md"
+  },
+  {
+    "slug": "disagree",
+    "title": "How to Disagree",
+    "url": "https://www.paulgraham.com/disagree.html",
+    "chunks": 9,
+    "file": "disagree.md"
+  },
+  {
+    "slug": "disc",
+    "title": "The Risk of Discovery",
+    "url": "https://www.paulgraham.com/disc.html",
+    "chunks": 1,
+    "file": "disc.md"
+  },
+  {
+    "slug": "discover",
+    "title": "Persuade xor Discover",
+    "url": "https://www.paulgraham.com/discover.html",
+    "chunks": 3,
+    "file": "discover.md"
+  },
+  {
+    "slug": "distraction",
+    "title": "Disconnecting Distraction",
+    "url": "https://www.paulgraham.com/distraction.html",
+    "chunks": 7,
+    "file": "distraction.md"
+  },
+  {
+    "slug": "divergence",
+    "title": "Could VC be a Casualty of the Recession?",
+    "url": "https://www.paulgraham.com/divergence.html",
+    "chunks": 8,
+    "file": "divergence.md"
+  },
+  {
+    "slug": "do",
+    "title": "What to Do",
+    "url": "https://www.paulgraham.com/do.html",
+    "chunks": 4,
+    "file": "do.md"
+  },
+  {
+    "slug": "donate",
+    "title": "Donate Unrestricted",
+    "url": "https://www.paulgraham.com/donate.html",
+    "chunks": 2,
+    "file": "donate.md"
+  },
+  {
+    "slug": "ds",
+    "title": "Do Things that Don't Scale",
+    "url": "https://www.paulgraham.com/ds.html",
+    "chunks": 25,
+    "file": "ds.md"
+  },
+  {
+    "slug": "early",
+    "title": "Early Work",
+    "url": "https://www.paulgraham.com/early.html",
+    "chunks": 4,
+    "file": "early.md"
+  },
+  {
+    "slug": "earnest",
+    "title": "Earnestness",
+    "url": "https://www.paulgraham.com/earnest.html",
+    "chunks": 1,
+    "file": "earnest.md"
+  },
+  {
+    "slug": "ecw",
+    "title": "How to Be an Expert in a Changing World",
+    "url": "https://www.paulgraham.com/ecw.html",
+    "chunks": 2,
+    "file": "ecw.md"
+  },
+  {
+    "slug": "equity",
+    "title": "The Equity Equation",
+    "url": "https://www.paulgraham.com/equity.html",
+    "chunks": 2,
+    "file": "equity.md"
+  },
+  {
+    "slug": "essay",
+    "title": "The Age of the Essay",
+    "url": "https://www.paulgraham.com/essay.html",
+    "chunks": 25,
+    "file": "essay.md"
+  },
+  {
+    "slug": "ffb",
+    "title": "Filters that Fight Back",
+    "url": "https://www.paulgraham.com/ffb.html",
+    "chunks": 5,
+    "file": "ffb.md"
+  },
+  {
+    "slug": "fh",
+    "title": "Haters",
+    "url": "https://www.paulgraham.com/fh.html",
+    "chunks": 8,
+    "file": "fh.md"
+  },
+  {
+    "slug": "field",
+    "title": "The Shape of the Essay Field",
+    "url": "https://www.paulgraham.com/field.html",
+    "chunks": 1,
+    "file": "field.md"
+  },
+  {
+    "slug": "fix",
+    "title": "What Languages Fix",
+    "url": "https://www.paulgraham.com/fix.html",
+    "chunks": 1,
+    "file": "fix.md"
+  },
+  {
+    "slug": "fn",
+    "title": "Fierce Nerds",
+    "url": "https://www.paulgraham.com/fn.html",
+    "chunks": 2,
+    "file": "fn.md"
+  },
+  {
+    "slug": "foundermode",
+    "title": "Founder Mode",
+    "url": "https://www.paulgraham.com/foundermode.html",
+    "chunks": 4,
+    "file": "foundermode.md"
+  },
+  {
+    "slug": "founders",
+    "title": "What We Look for in Founders",
+    "url": "https://www.paulgraham.com/founders.html",
+    "chunks": 5,
+    "file": "founders.md"
+  },
+  {
+    "slug": "foundersatwork",
+    "title": "Learning from Founders",
+    "url": "https://www.paulgraham.com/foundersatwork.html",
+    "chunks": 5,
+    "file": "foundersatwork.md"
+  },
+  {
+    "slug": "foundervisa",
+    "title": "The Founder Visa",
+    "url": "https://www.paulgraham.com/foundervisa.html",
+    "chunks": 3,
+    "file": "foundervisa.md"
+  },
+  {
+    "slug": "fp",
+    "title": "Fashionable Problems",
+    "url": "https://www.paulgraham.com/fp.html",
+    "chunks": 1,
+    "file": "fp.md"
+  },
+  {
+    "slug": "fr",
+    "title": "How to Raise Money",
+    "url": "https://www.paulgraham.com/fr.html",
+    "chunks": 60,
+    "file": "fr.md"
+  },
+  {
+    "slug": "fundraising",
+    "title": "A Fundraising Survival Guide",
+    "url": "https://www.paulgraham.com/fundraising.html",
+    "chunks": 27,
+    "file": "fundraising.md"
+  },
+  {
+    "slug": "future",
+    "title": "The Future of Startup Funding",
+    "url": "https://www.paulgraham.com/future.html",
+    "chunks": 22,
+    "file": "future.md"
+  },
+  {
+    "slug": "gap",
+    "title": "Mind the Gap",
+    "url": "https://www.paulgraham.com/gap.html",
+    "chunks": 3,
+    "file": "gap.md"
+  },
+  {
+    "slug": "gba",
+    "title": "The Word \"Hacker\"",
+    "url": "https://www.paulgraham.com/gba.html",
+    "chunks": 11,
+    "file": "gba.md"
+  },
+  {
+    "slug": "genius",
+    "title": "The Bus Ticket Theory of Genius",
+    "url": "https://www.paulgraham.com/genius.html",
+    "chunks": 15,
+    "file": "genius.md"
+  },
+  {
+    "slug": "getideas",
+    "title": "How to Get New Ideas",
+    "url": "https://www.paulgraham.com/getideas.html",
+    "chunks": 1,
+    "file": "getideas.md"
+  },
+  {
+    "slug": "gh",
+    "title": "Great Hackers",
+    "url": "https://www.paulgraham.com/gh.html",
+    "chunks": 29,
+    "file": "gh.md"
+  },
+  {
+    "slug": "good",
+    "title": "Be Good",
+    "url": "https://www.paulgraham.com/good.html",
+    "chunks": 2,
+    "file": "good.md"
+  },
+  {
+    "slug": "goodart",
+    "title": "How Art Can Be Good",
+    "url": "https://www.paulgraham.com/goodart.html",
+    "chunks": 3,
+    "file": "goodart.md"
+  },
+  {
+    "slug": "goodtaste",
+    "title": "Is There Such a Thing as Good Taste?",
+    "url": "https://www.paulgraham.com/goodtaste.html",
+    "chunks": 7,
+    "file": "goodtaste.md"
+  },
+  {
+    "slug": "goodwriting",
+    "title": "Good Writing",
+    "url": "https://www.paulgraham.com/goodwriting.html",
+    "chunks": 1,
+    "file": "goodwriting.md"
+  },
+  {
+    "slug": "google",
+    "title": "How to Start Google",
+    "url": "https://www.paulgraham.com/google.html",
+    "chunks": 3,
+    "file": "google.md"
+  },
+  {
+    "slug": "googles",
+    "title": "Why There Aren't More Googles",
+    "url": "https://www.paulgraham.com/googles.html",
+    "chunks": 8,
+    "file": "googles.md"
+  },
+  {
+    "slug": "greatwork",
+    "title": "How to Do Great Work",
+    "url": "https://www.paulgraham.com/greatwork.html",
+    "chunks": 1,
+    "file": "greatwork.md"
+  },
+  {
+    "slug": "growth",
+    "title": "Startup = Growth",
+    "url": "https://www.paulgraham.com/growth.html",
+    "chunks": 30,
+    "file": "growth.md"
+  },
+  {
+    "slug": "guidetoinvestors",
+    "title": "The Hacker's Guide to Investors",
+    "url": "https://www.paulgraham.com/guidetoinvestors.html",
+    "chunks": 2,
+    "file": "guidetoinvestors.md"
+  },
+  {
+    "slug": "hackernews",
+    "title": "What I've Learned from Hacker News",
+    "url": "https://www.paulgraham.com/hackernews.html",
+    "chunks": 3,
+    "file": "hackernews.md"
+  },
+  {
+    "slug": "head",
+    "title": "Holding a Program in One's Head",
+    "url": "https://www.paulgraham.com/head.html",
+    "chunks": 11,
+    "file": "head.md"
+  },
+  {
+    "slug": "herd",
+    "title": "Investor Herd Dynamics",
+    "url": "https://www.paulgraham.com/herd.html",
+    "chunks": 6,
+    "file": "herd.md"
+  },
+  {
+    "slug": "heresy",
+    "title": "Heresy",
+    "url": "https://www.paulgraham.com/heresy.html",
+    "chunks": 1,
+    "file": "heresy.md"
+  },
+  {
+    "slug": "heroes",
+    "title": "Some Heroes",
+    "url": "https://www.paulgraham.com/heroes.html",
+    "chunks": 15,
+    "file": "heroes.md"
+  },
+  {
+    "slug": "highres",
+    "title": "The High-Res Society",
+    "url": "https://www.paulgraham.com/highres.html",
+    "chunks": 1,
+    "file": "highres.md"
+  },
+  {
+    "slug": "hiresfund",
+    "title": "High Resolution Fundraising",
+    "url": "https://www.paulgraham.com/hiresfund.html",
+    "chunks": 4,
+    "file": "hiresfund.md"
+  },
+  {
+    "slug": "hiring",
+    "title": "Hiring is Obsolete",
+    "url": "https://www.paulgraham.com/hiring.html",
+    "chunks": 27,
+    "file": "hiring.md"
+  },
+  {
+    "slug": "hp",
+    "title": "Hackers and Painters",
+    "url": "https://www.paulgraham.com/hp.html",
+    "chunks": 31,
+    "file": "hp.md"
+  },
+  {
+    "slug": "hs",
+    "title": "What You'll Wish You'd Known",
+    "url": "https://www.paulgraham.com/hs.html",
+    "chunks": 28,
+    "file": "hs.md"
+  },
+  {
+    "slug": "hubs",
+    "title": "Why Startup Hubs Work",
+    "url": "https://www.paulgraham.com/hubs.html",
+    "chunks": 10,
+    "file": "hubs.md"
+  },
+  {
+    "slug": "hundred",
+    "title": "The Hundred-Year Language",
+    "url": "https://www.paulgraham.com/hundred.html",
+    "chunks": 27,
+    "file": "hundred.md"
+  },
+  {
+    "slug": "hw",
+    "title": "The Hardware Renaissance",
+    "url": "https://www.paulgraham.com/hw.html",
+    "chunks": 3,
+    "file": "hw.md"
+  },
+  {
+    "slug": "hwh",
+    "title": "How to Work Hard",
+    "url": "https://www.paulgraham.com/hwh.html",
+    "chunks": 2,
+    "file": "hwh.md"
+  },
+  {
+    "slug": "icad",
+    "title": "Revenge of the Nerds",
+    "url": "https://www.paulgraham.com/icad.html",
+    "chunks": 33,
+    "file": "icad.md"
+  },
+  {
+    "slug": "ideas",
+    "title": "Ideas for Startups",
+    "url": "https://www.paulgraham.com/ideas.html",
+    "chunks": 22,
+    "file": "ideas.md"
+  },
+  {
+    "slug": "identity",
+    "title": "Keep Your Identity Small",
+    "url": "https://www.paulgraham.com/identity.html",
+    "chunks": 2,
+    "file": "identity.md"
+  },
+  {
+    "slug": "iflisp",
+    "title": "If Lisp is So Great",
+    "url": "https://www.paulgraham.com/iflisp.html",
+    "chunks": 3,
+    "file": "iflisp.md"
+  },
+  {
+    "slug": "ineq",
+    "title": "Economic Inequality",
+    "url": "https://www.paulgraham.com/ineq.html",
+    "chunks": 19,
+    "file": "ineq.md"
+  },
+  {
+    "slug": "inequality",
+    "title": "Inequality and Risk",
+    "url": "https://www.paulgraham.com/inequality.html",
+    "chunks": 4,
+    "file": "inequality.md"
+  },
+  {
+    "slug": "investors",
+    "title": "How to Present to Investors",
+    "url": "https://www.paulgraham.com/investors.html",
+    "chunks": 16,
+    "file": "investors.md"
+  },
+  {
+    "slug": "invtrend",
+    "title": "Startup Investing Trends",
+    "url": "https://www.paulgraham.com/invtrend.html",
+    "chunks": 17,
+    "file": "invtrend.md"
+  },
+  {
+    "slug": "island",
+    "title": "The Island Test",
+    "url": "https://www.paulgraham.com/island.html",
+    "chunks": 4,
+    "file": "island.md"
+  },
+  {
+    "slug": "javacover",
+    "title": "Java's Cover",
+    "url": "https://www.paulgraham.com/javacover.html",
+    "chunks": 8,
+    "file": "javacover.md"
+  },
+  {
+    "slug": "jessica",
+    "title": "Jessica Livingston",
+    "url": "https://www.paulgraham.com/jessica.html",
+    "chunks": 4,
+    "file": "jessica.md"
+  },
+  {
+    "slug": "judgement",
+    "title": "Two Kinds of Judgement",
+    "url": "https://www.paulgraham.com/judgement.html",
+    "chunks": 4,
+    "file": "judgement.md"
+  },
+  {
+    "slug": "kate",
+    "title": "What Kate Saw in Silicon Valley",
+    "url": "https://www.paulgraham.com/kate.html",
+    "chunks": 5,
+    "file": "kate.md"
+  },
+  {
+    "slug": "kids",
+    "title": "Having Kids",
+    "url": "https://www.paulgraham.com/kids.html",
+    "chunks": 9,
+    "file": "kids.md"
+  },
+  {
+    "slug": "know",
+    "title": "How You Know",
+    "url": "https://www.paulgraham.com/know.html",
+    "chunks": 4,
+    "file": "know.md"
+  },
+  {
+    "slug": "ladder",
+    "title": "After the Ladder",
+    "url": "https://www.paulgraham.com/ladder.html",
+    "chunks": 4,
+    "file": "ladder.md"
+  },
+  {
+    "slug": "langdes",
+    "title": "Five Questions about Language Design",
+    "url": "https://www.paulgraham.com/langdes.html",
+    "chunks": 17,
+    "file": "langdes.md"
+  },
+  {
+    "slug": "laundry",
+    "title": "A Version 1.0",
+    "url": "https://www.paulgraham.com/laundry.html",
+    "chunks": 1,
+    "file": "laundry.md"
+  },
+  {
+    "slug": "lesson",
+    "title": "The Lesson to Unlearn",
+    "url": "https://www.paulgraham.com/lesson.html",
+    "chunks": 23,
+    "file": "lesson.md"
+  },
+  {
+    "slug": "lies",
+    "title": "Lies We Tell Kids",
+    "url": "https://www.paulgraham.com/lies.html",
+    "chunks": 1,
+    "file": "lies.md"
+  },
+  {
+    "slug": "love",
+    "title": "How to Do What You Love",
+    "url": "https://www.paulgraham.com/love.html",
+    "chunks": 27,
+    "file": "love.md"
+  },
+  {
+    "slug": "mac",
+    "title": "Return of the Mac",
+    "url": "https://www.paulgraham.com/mac.html",
+    "chunks": 6,
+    "file": "mac.md"
+  },
+  {
+    "slug": "makersschedule",
+    "title": "Maker's Schedule, Manager's Schedule",
+    "url": "https://www.paulgraham.com/makersschedule.html",
+    "chunks": 7,
+    "file": "makersschedule.md"
+  },
+  {
+    "slug": "marginal",
+    "title": "The Power of the Marginal",
+    "url": "https://www.paulgraham.com/marginal.html",
+    "chunks": 34,
+    "file": "marginal.md"
+  },
+  {
+    "slug": "maybe",
+    "title": "Can You Buy a Silicon Valley?  Maybe.",
+    "url": "https://www.paulgraham.com/maybe.html",
+    "chunks": 1,
+    "file": "maybe.md"
+  },
+  {
+    "slug": "mean",
+    "title": "Mean People Fail",
+    "url": "https://www.paulgraham.com/mean.html",
+    "chunks": 3,
+    "file": "mean.md"
+  },
+  {
+    "slug": "microsoft",
+    "title": "Microsoft is Dead",
+    "url": "https://www.paulgraham.com/microsoft.html",
+    "chunks": 4,
+    "file": "microsoft.md"
+  },
+  {
+    "slug": "mit",
+    "title": "A Student's Guide to Startups",
+    "url": "https://www.paulgraham.com/mit.html",
+    "chunks": 36,
+    "file": "mit.md"
+  },
+  {
+    "slug": "mod",
+    "title": "The Two Kinds of Moderate",
+    "url": "https://www.paulgraham.com/mod.html",
+    "chunks": 4,
+    "file": "mod.md"
+  },
+  {
+    "slug": "name",
+    "title": "Change Your Name",
+    "url": "https://www.paulgraham.com/name.html",
+    "chunks": 1,
+    "file": "name.md"
+  },
+  {
+    "slug": "nerds",
+    "title": "Why Nerds are Unpopular",
+    "url": "https://www.paulgraham.com/nerds.html",
+    "chunks": 32,
+    "file": "nerds.md"
+  },
+  {
+    "slug": "newideas",
+    "title": "Crazy New Ideas",
+    "url": "https://www.paulgraham.com/newideas.html",
+    "chunks": 1,
+    "file": "newideas.md"
+  },
+  {
+    "slug": "newthings",
+    "title": "Six Principles for Making New Things",
+    "url": "https://www.paulgraham.com/newthings.html",
+    "chunks": 7,
+    "file": "newthings.md"
+  },
+  {
+    "slug": "nft",
+    "title": "An NFT That Saves Lives",
+    "url": "https://www.paulgraham.com/nft.html",
+    "chunks": 2,
+    "file": "nft.md"
+  },
+  {
+    "slug": "noob",
+    "title": "Being a Noob",
+    "url": "https://www.paulgraham.com/noob.html",
+    "chunks": 2,
+    "file": "noob.md"
+  },
+  {
+    "slug": "notnot",
+    "title": "Why to Not Not Start a Startup",
+    "url": "https://www.paulgraham.com/notnot.html",
+    "chunks": 35,
+    "file": "notnot.md"
+  },
+  {
+    "slug": "nov",
+    "title": "Novelty and Heresy",
+    "url": "https://www.paulgraham.com/nov.html",
+    "chunks": 2,
+    "file": "nov.md"
+  },
+  {
+    "slug": "nthings",
+    "title": "The List of N Things",
+    "url": "https://www.paulgraham.com/nthings.html",
+    "chunks": 1,
+    "file": "nthings.md"
+  },
+  {
+    "slug": "opensource",
+    "title": "What Business Can Learn from Open Source",
+    "url": "https://www.paulgraham.com/opensource.html",
+    "chunks": 25,
+    "file": "opensource.md"
+  },
+  {
+    "slug": "organic",
+    "title": "Organic Startup Ideas",
+    "url": "https://www.paulgraham.com/organic.html",
+    "chunks": 6,
+    "file": "organic.md"
+  },
+  {
+    "slug": "orth",
+    "title": "Orthodox Privilege",
+    "url": "https://www.paulgraham.com/orth.html",
+    "chunks": 4,
+    "file": "orth.md"
+  },
+  {
+    "slug": "own",
+    "title": "A Project of One's Own",
+    "url": "https://www.paulgraham.com/own.html",
+    "chunks": 2,
+    "file": "own.md"
+  },
+  {
+    "slug": "patentpledge",
+    "title": "The Patent Pledge",
+    "url": "https://www.paulgraham.com/patentpledge.html",
+    "chunks": 2,
+    "file": "patentpledge.md"
+  },
+  {
+    "slug": "persistence",
+    "title": "The Right Kind of Stubborn",
+    "url": "https://www.paulgraham.com/persistence.html",
+    "chunks": 1,
+    "file": "persistence.md"
+  },
+  {
+    "slug": "pgh",
+    "title": "How to Make Pittsburgh a Startup Hub",
+    "url": "https://www.paulgraham.com/pgh.html",
+    "chunks": 15,
+    "file": "pgh.md"
+  },
+  {
+    "slug": "philosophy",
+    "title": "How to Do Philosophy",
+    "url": "https://www.paulgraham.com/philosophy.html",
+    "chunks": 3,
+    "file": "philosophy.md"
+  },
+  {
+    "slug": "pinch",
+    "title": "The Fatal Pinch",
+    "url": "https://www.paulgraham.com/pinch.html",
+    "chunks": 9,
+    "file": "pinch.md"
+  },
+  {
+    "slug": "polls",
+    "title": "Bradley's Ghost",
+    "url": "https://www.paulgraham.com/polls.html",
+    "chunks": 4,
+    "file": "polls.md"
+  },
+  {
+    "slug": "popular",
+    "title": "Being Popular",
+    "url": "https://www.paulgraham.com/popular.html",
+    "chunks": 42,
+    "file": "popular.md"
+  },
+  {
+    "slug": "pow",
+    "title": "Charisma / Power",
+    "url": "https://www.paulgraham.com/pow.html",
+    "chunks": 1,
+    "file": "pow.md"
+  },
+  {
+    "slug": "power",
+    "title": "Succinctness is Power",
+    "url": "https://www.paulgraham.com/power.html",
+    "chunks": 17,
+    "file": "power.md"
+  },
+  {
+    "slug": "prcmc",
+    "title": "The Pooled-Risk Company Management Company",
+    "url": "https://www.paulgraham.com/prcmc.html",
+    "chunks": 7,
+    "file": "prcmc.md"
+  },
+  {
+    "slug": "procrastination",
+    "title": "Good and Bad Procrastination",
+    "url": "https://www.paulgraham.com/procrastination.html",
+    "chunks": 10,
+    "file": "procrastination.md"
+  },
+  {
+    "slug": "progbot",
+    "title": "Programming Bottom-Up",
+    "url": "https://www.paulgraham.com/progbot.html",
+    "chunks": 5,
+    "file": "progbot.md"
+  },
+  {
+    "slug": "prop62",
+    "title": "This Year We Can End the Death Penalty in California",
+    "url": "https://www.paulgraham.com/prop62.html",
+    "chunks": 1,
+    "file": "prop62.md"
+  },
+  {
+    "slug": "property",
+    "title": "Defining Property",
+    "url": "https://www.paulgraham.com/property.html",
+    "chunks": 2,
+    "file": "property.md"
+  },
+  {
+    "slug": "publishing",
+    "title": "Post-Medium Publishing",
+    "url": "https://www.paulgraham.com/publishing.html",
+    "chunks": 1,
+    "file": "publishing.md"
+  },
+  {
+    "slug": "pypar",
+    "title": "The Python Paradox",
+    "url": "https://www.paulgraham.com/pypar.html",
+    "chunks": 3,
+    "file": "pypar.md"
+  },
+  {
+    "slug": "ramenprofitable",
+    "title": "Ramen Profitable",
+    "url": "https://www.paulgraham.com/ramenprofitable.html",
+    "chunks": 11,
+    "file": "ramenprofitable.md"
+  },
+  {
+    "slug": "randomness",
+    "title": "See Randomness",
+    "url": "https://www.paulgraham.com/randomness.html",
+    "chunks": 4,
+    "file": "randomness.md"
+  },
+  {
+    "slug": "re",
+    "title": "The Refragmentation",
+    "url": "https://www.paulgraham.com/re.html",
+    "chunks": 2,
+    "file": "re.md"
+  },
+  {
+    "slug": "read",
+    "title": "The Need to Read",
+    "url": "https://www.paulgraham.com/read.html",
+    "chunks": 1,
+    "file": "read.md"
+  },
+  {
+    "slug": "real",
+    "title": "The Real Reason to End the Death Penalty",
+    "url": "https://www.paulgraham.com/real.html",
+    "chunks": 5,
+    "file": "real.md"
+  },
+  {
+    "slug": "really",
+    "title": "What Startups Are Really Like",
+    "url": "https://www.paulgraham.com/really.html",
+    "chunks": 29,
+    "file": "really.md"
+  },
+  {
+    "slug": "reddits",
+    "title": "The Reddits",
+    "url": "https://www.paulgraham.com/reddits.html",
+    "chunks": 7,
+    "file": "reddits.md"
+  },
+  {
+    "slug": "relres",
+    "title": "Relentlessly Resourceful",
+    "url": "https://www.paulgraham.com/relres.html",
+    "chunks": 6,
+    "file": "relres.md"
+  },
+  {
+    "slug": "revolution",
+    "title": "A Local Revolution?",
+    "url": "https://www.paulgraham.com/revolution.html",
+    "chunks": 1,
+    "file": "revolution.md"
+  },
+  {
+    "slug": "richnow",
+    "title": "How People Get Rich Now",
+    "url": "https://www.paulgraham.com/richnow.html",
+    "chunks": 2,
+    "file": "richnow.md"
+  },
+  {
+    "slug": "road",
+    "title": "The Other Road Ahead",
+    "url": "https://www.paulgraham.com/road.html",
+    "chunks": 67,
+    "file": "road.md"
+  },
+  {
+    "slug": "ronco",
+    "title": "The Ronco Principle",
+    "url": "https://www.paulgraham.com/ronco.html",
+    "chunks": 2,
+    "file": "ronco.md"
+  },
+  {
+    "slug": "rootsoflisp",
+    "title": "The Roots of Lisp",
+    "url": "https://www.paulgraham.com/rootsoflisp.html",
+    "chunks": 2,
+    "file": "rootsoflisp.md"
+  },
+  {
+    "slug": "safe",
+    "title": "Why It's Safe for Founders to Be Nice",
+    "url": "https://www.paulgraham.com/safe.html",
+    "chunks": 1,
+    "file": "safe.md"
+  },
+  {
+    "slug": "say",
+    "title": "What You Can't Say",
+    "url": "https://www.paulgraham.com/say.html",
+    "chunks": 30,
+    "file": "say.md"
+  },
+  {
+    "slug": "schlep",
+    "title": "Schlep Blindness",
+    "url": "https://www.paulgraham.com/schlep.html",
+    "chunks": 5,
+    "file": "schlep.md"
+  },
+  {
+    "slug": "seesv",
+    "title": "Where to See Silicon Valley",
+    "url": "https://www.paulgraham.com/seesv.html",
+    "chunks": 6,
+    "file": "seesv.md"
+  },
+  {
+    "slug": "segway",
+    "title": "The Trouble with the Segway",
+    "url": "https://www.paulgraham.com/segway.html",
+    "chunks": 2,
+    "file": "segway.md"
+  },
+  {
+    "slug": "selfindulgence",
+    "title": "How to Lose Time and Money",
+    "url": "https://www.paulgraham.com/selfindulgence.html",
+    "chunks": 4,
+    "file": "selfindulgence.md"
+  },
+  {
+    "slug": "sfp",
+    "title": "What I Did this Summer",
+    "url": "https://www.paulgraham.com/sfp.html",
+    "chunks": 15,
+    "file": "sfp.md"
+  },
+  {
+    "slug": "siliconvalley",
+    "title": "How to Be Silicon Valley",
+    "url": "https://www.paulgraham.com/siliconvalley.html",
+    "chunks": 1,
+    "file": "siliconvalley.md"
+  },
+  {
+    "slug": "simply",
+    "title": "Write Simply",
+    "url": "https://www.paulgraham.com/simply.html",
+    "chunks": 3,
+    "file": "simply.md"
+  },
+  {
+    "slug": "smart",
+    "title": "Beyond Smart",
+    "url": "https://www.paulgraham.com/smart.html",
+    "chunks": 2,
+    "file": "smart.md"
+  },
+  {
+    "slug": "softwarepatents",
+    "title": "Are Software Patents Evil?",
+    "url": "https://www.paulgraham.com/softwarepatents.html",
+    "chunks": 26,
+    "file": "softwarepatents.md"
+  },
+  {
+    "slug": "spam",
+    "title": "A Plan for Spam",
+    "url": "https://www.paulgraham.com/spam.html",
+    "chunks": 30,
+    "file": "spam.md"
+  },
+  {
+    "slug": "speak",
+    "title": "Writing and Speaking",
+    "url": "https://www.paulgraham.com/speak.html",
+    "chunks": 2,
+    "file": "speak.md"
+  },
+  {
+    "slug": "start",
+    "title": "How to Start a Startup",
+    "url": "https://www.paulgraham.com/start.html",
+    "chunks": 55,
+    "file": "start.md"
+  },
+  {
+    "slug": "startupfunding",
+    "title": "How to Fund a Startup",
+    "url": "https://www.paulgraham.com/startupfunding.html",
+    "chunks": 50,
+    "file": "startupfunding.md"
+  },
+  {
+    "slug": "startuphubs",
+    "title": "Why to Move to a Startup Hub",
+    "url": "https://www.paulgraham.com/startuphubs.html",
+    "chunks": 1,
+    "file": "startuphubs.md"
+  },
+  {
+    "slug": "startupideas",
+    "title": "How to Get Startup Ideas",
+    "url": "https://www.paulgraham.com/startupideas.html",
+    "chunks": 40,
+    "file": "startupideas.md"
+  },
+  {
+    "slug": "startuplessons",
+    "title": "The Hardest Lessons for Startups to Learn",
+    "url": "https://www.paulgraham.com/startuplessons.html",
+    "chunks": 2,
+    "file": "startuplessons.md"
+  },
+  {
+    "slug": "startupmistakes",
+    "title": "The 18 Mistakes That Kill Startups",
+    "url": "https://www.paulgraham.com/startupmistakes.html",
+    "chunks": 31,
+    "file": "startupmistakes.md"
+  },
+  {
+    "slug": "stuff",
+    "title": "Stuff",
+    "url": "https://www.paulgraham.com/stuff.html",
+    "chunks": 7,
+    "file": "stuff.md"
+  },
+  {
+    "slug": "submarine",
+    "title": "The Submarine",
+    "url": "https://www.paulgraham.com/submarine.html",
+    "chunks": 1,
+    "file": "submarine.md"
+  },
+  {
+    "slug": "sun",
+    "title": "General and Surprising",
+    "url": "https://www.paulgraham.com/sun.html",
+    "chunks": 3,
+    "file": "sun.md"
+  },
+  {
+    "slug": "superangels",
+    "title": "The New Funding Landscape",
+    "url": "https://www.paulgraham.com/superangels.html",
+    "chunks": 20,
+    "file": "superangels.md"
+  },
+  {
+    "slug": "superlinear",
+    "title": "Superlinear Returns",
+    "url": "https://www.paulgraham.com/superlinear.html",
+    "chunks": 1,
+    "file": "superlinear.md"
+  },
+  {
+    "slug": "swan",
+    "title": "Black Swan Farming",
+    "url": "https://www.paulgraham.com/swan.html",
+    "chunks": 12,
+    "file": "swan.md"
+  },
+  {
+    "slug": "tablets",
+    "title": "Tablets",
+    "url": "https://www.paulgraham.com/tablets.html",
+    "chunks": 3,
+    "file": "tablets.md"
+  },
+  {
+    "slug": "talk",
+    "title": "Write Like You Talk",
+    "url": "https://www.paulgraham.com/talk.html",
+    "chunks": 4,
+    "file": "talk.md"
+  },
+  {
+    "slug": "taste",
+    "title": "Taste for Makers",
+    "url": "https://www.paulgraham.com/taste.html",
+    "chunks": 1,
+    "file": "taste.md"
+  },
+  {
+    "slug": "think",
+    "title": "How to Think for Yourself",
+    "url": "https://www.paulgraham.com/think.html",
+    "chunks": 3,
+    "file": "think.md"
+  },
+  {
+    "slug": "todo",
+    "title": "The Top of My Todo List",
+    "url": "https://www.paulgraham.com/todo.html",
+    "chunks": 2,
+    "file": "todo.md"
+  },
+  {
+    "slug": "top",
+    "title": "The Top Idea in Your Mind",
+    "url": "https://www.paulgraham.com/top.html",
+    "chunks": 7,
+    "file": "top.md"
+  },
+  {
+    "slug": "trolls",
+    "title": "Trolls",
+    "url": "https://www.paulgraham.com/trolls.html",
+    "chunks": 1,
+    "file": "trolls.md"
+  },
+  {
+    "slug": "twitter",
+    "title": "Why Twitter is a Big Deal",
+    "url": "https://www.paulgraham.com/twitter.html",
+    "chunks": 1,
+    "file": "twitter.md"
+  },
+  {
+    "slug": "unions",
+    "title": "An Alternative Theory of Unions",
+    "url": "https://www.paulgraham.com/unions.html",
+    "chunks": 3,
+    "file": "unions.md"
+  },
+  {
+    "slug": "usa",
+    "title": "Made in USA",
+    "url": "https://www.paulgraham.com/usa.html",
+    "chunks": 11,
+    "file": "usa.md"
+  },
+  {
+    "slug": "useful",
+    "title": "How to Write Usefully",
+    "url": "https://www.paulgraham.com/useful.html",
+    "chunks": 16,
+    "file": "useful.md"
+  },
+  {
+    "slug": "users",
+    "title": "What I've Learned from Users",
+    "url": "https://www.paulgraham.com/users.html",
+    "chunks": 2,
+    "file": "users.md"
+  },
+  {
+    "slug": "vb",
+    "title": "Life is Short",
+    "url": "https://www.paulgraham.com/vb.html",
+    "chunks": 2,
+    "file": "vb.md"
+  },
+  {
+    "slug": "vcsqueeze",
+    "title": "The Venture Capital Squeeze",
+    "url": "https://www.paulgraham.com/vcsqueeze.html",
+    "chunks": 9,
+    "file": "vcsqueeze.md"
+  },
+  {
+    "slug": "venturecapital",
+    "title": "A Unified Theory of VC Suckage",
+    "url": "https://www.paulgraham.com/venturecapital.html",
+    "chunks": 8,
+    "file": "venturecapital.md"
+  },
+  {
+    "slug": "vw",
+    "title": "Snapshot: Viaweb, June 1998",
+    "url": "https://www.paulgraham.com/vw.html",
+    "chunks": 5,
+    "file": "vw.md"
+  },
+  {
+    "slug": "want",
+    "title": "What You (Want to)* Want",
+    "url": "https://www.paulgraham.com/want.html",
+    "chunks": 1,
+    "file": "want.md"
+  },
+  {
+    "slug": "wealth",
+    "title": "How to Make Wealth",
+    "url": "https://www.paulgraham.com/wealth.html",
+    "chunks": 50,
+    "file": "wealth.md"
+  },
+  {
+    "slug": "web20",
+    "title": "Web 2.0",
+    "url": "https://www.paulgraham.com/web20.html",
+    "chunks": 19,
+    "file": "web20.md"
+  },
+  {
+    "slug": "webstartups",
+    "title": "The Future of Web Startups",
+    "url": "https://www.paulgraham.com/webstartups.html",
+    "chunks": 19,
+    "file": "webstartups.md"
+  },
+  {
+    "slug": "weird",
+    "title": "Weird Languages",
+    "url": "https://www.paulgraham.com/weird.html",
+    "chunks": 2,
+    "file": "weird.md"
+  },
+  {
+    "slug": "when",
+    "title": "When To Do What You Love",
+    "url": "https://www.paulgraham.com/when.html",
+    "chunks": 2,
+    "file": "when.md"
+  },
+  {
+    "slug": "whyyc",
+    "title": "Why YC",
+    "url": "https://www.paulgraham.com/whyyc.html",
+    "chunks": 2,
+    "file": "whyyc.md"
+  },
+  {
+    "slug": "wisdom",
+    "title": "Is It Worth Being Wise?",
+    "url": "https://www.paulgraham.com/wisdom.html",
+    "chunks": 1,
+    "file": "wisdom.md"
+  },
+  {
+    "slug": "woke",
+    "title": "The Origins of Wokeness",
+    "url": "https://www.paulgraham.com/woke.html",
+    "chunks": 2,
+    "file": "woke.md"
+  },
+  {
+    "slug": "word",
+    "title": "A Word to the Resourceful",
+    "url": "https://www.paulgraham.com/word.html",
+    "chunks": 5,
+    "file": "word.md"
+  },
+  {
+    "slug": "words",
+    "title": "Putting Ideas into Words",
+    "url": "https://www.paulgraham.com/words.html",
+    "chunks": 3,
+    "file": "words.md"
+  },
+  {
+    "slug": "work",
+    "title": "What Doesn't Seem Like Work?",
+    "url": "https://www.paulgraham.com/work.html",
+    "chunks": 3,
+    "file": "work.md"
+  },
+  {
+    "slug": "worked",
+    "title": "What I Worked On",
+    "url": "https://www.paulgraham.com/worked.html",
+    "chunks": 2,
+    "file": "worked.md"
+  },
+  {
+    "slug": "writes",
+    "title": "Writes and Write-Nots",
+    "url": "https://www.paulgraham.com/writes.html",
+    "chunks": 3,
+    "file": "writes.md"
+  },
+  {
+    "slug": "writing44",
+    "title": "Writing,  Briefly",
+    "url": "https://www.paulgraham.com/writing44.html",
+    "chunks": 3,
+    "file": "writing44.md"
+  },
+  {
+    "slug": "wtax",
+    "title": "Modeling a Wealth Tax",
+    "url": "https://www.paulgraham.com/wtax.html",
+    "chunks": 1,
+    "file": "wtax.md"
+  },
+  {
+    "slug": "yahoo",
+    "title": "What Happened to Yahoo",
+    "url": "https://www.paulgraham.com/yahoo.html",
+    "chunks": 12,
+    "file": "yahoo.md"
+  },
+  {
+    "slug": "ycombinator",
+    "title": "A New Venture Animal",
+    "url": "https://www.paulgraham.com/ycombinator.html",
+    "chunks": 11,
+    "file": "ycombinator.md"
+  },
+  {
+    "slug": "ycstart",
+    "title": "How Y Combinator Started",
+    "url": "https://www.paulgraham.com/ycstart.html",
+    "chunks": 1,
+    "file": "ycstart.md"
+  }
+]
