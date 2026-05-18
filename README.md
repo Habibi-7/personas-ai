@@ -1,16 +1,17 @@
-# Paul Graham AI (local)
+# Personas AI
 
-AI persona answering questions grounded in ~220 Paul Graham essays. Fully local indexing — no NIA dependency.
+AI persona answering questions grounded in ~220 Paul Graham essays. Fully local corpus + embeddings — no third-party SaaS dependency for essay access.
 
-Fork of [nozomio-labs/paulgraham-ai](https://github.com/nozomio-labs/paulgraham-ai) with the NIA backend ripped out and replaced by:
+Stack:
 
-| Capability       | Local replacement                                         |
+| Capability       | Implementation                                            |
 | ---------------- | --------------------------------------------------------- |
 | Essay corpus     | Scraped from paulgraham.com → `data/essays/*.md`          |
 | Semantic search  | `@xenova/transformers` MiniLM-L6-v2, cosine over JSON     |
 | Browse / read    | `node:fs` over `data/essays/`                             |
 | Regex search     | `ripgrep` subprocess                                      |
 | Web search       | Tavily HTTP API (optional)                                |
+| Chat UI / models | Next.js 15 + AI SDK + Vercel AI Gateway                   |
 
 ## Setup
 
@@ -38,14 +39,18 @@ bun run dev
 
 ## How it works
 
-- `lib/local-tools.ts` exports the same tool surface the chat route expects (`searchEssays`, `browseEssays`, `listDirectory`, `readEssay`, `grepEssays`, `webSearch`, `getSourceContent`) backed by local files.
+- `lib/local-tools.ts` exports the tool surface the chat route consumes (`searchEssays`, `browseEssays`, `listDirectory`, `readEssay`, `grepEssays`, `webSearch`, `getSourceContent`) backed entirely by local files.
 - `data/index/embeddings.json` holds chunk vectors (2k+ chunks across 220+ essays). Loaded once into memory on first tool call.
 - MiniLM model (~25MB) is fetched from HuggingFace on first run and cached.
 
 ## Swapping the persona
 
-Drop a different writer's essays into `data/essays/<slug>.md` (frontmatter: `title`, `slug`, `url`), then `bun run index`. Update `PAUL_GRAHAM_SYSTEM_PROMPT` in `app/api/chat/route.ts`.
+Drop a different writer's essays into `data/essays/<slug>.md` (frontmatter: `title`, `slug`, `url`), then `bun run index`. Update the system prompt in `app/api/chat/route.ts`.
+
+## Credits
+
+Inspired by [Nozomio Labs](https://github.com/nozomio-labs) and their [Nia](https://trynia.ai) platform, which prototyped the original Paul Graham essay agent concept. This project re-implements the idea with a fully local stack.
 
 ## License
 
-Original code under the LICENSE shipped with the upstream fork. Essay text remains property of Paul Graham.
+Code under MIT (see LICENSE). Essay text remains property of Paul Graham.
