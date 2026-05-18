@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
@@ -16,24 +16,25 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Paul Graham Agent",
-  description: "Ask Paul Graham anything — an AI agent grounded in 120+ essays, powered by Nia",
+  description: "Ask Paul Graham anything — an AI agent grounded in 220+ essays.",
   openGraph: {
     title: "Paul Graham Agent",
-    description: "Ask Paul Graham anything — an AI agent grounded in 120+ essays, powered by Nia",
+    description: "Ask Paul Graham anything — an AI agent grounded in 220+ essays.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Paul Graham Agent",
-    description: "Ask Paul Graham anything — an AI agent grounded in 120+ essays, powered by Nia",
+    description: "Ask Paul Graham anything — an AI agent grounded in 220+ essays.",
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-    viewportFit: "cover",
-  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

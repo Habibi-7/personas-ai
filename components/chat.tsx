@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
 import { ArrowUpIcon, PlusIcon, SearchIcon, BookOpenIcon, FileTextIcon, GlobeIcon, CopyIcon, CheckIcon, ThumbsUpIcon, ThumbsDownIcon, GithubIcon } from "lucide-react";
+import { DEFAULT_MODEL, type SupportedModel } from "@/lib/constants";
 import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { UIMessage } from "@ai-sdk/react";
@@ -12,7 +13,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Streamdown } from "streamdown";
-import { DEFAULT_MODEL, type SupportedModel } from "@/lib/constants";
 
 const toolIcons: Record<string, React.ReactNode> = {
   searchEssays: <SearchIcon className="h-3 w-3" />,
@@ -51,21 +51,21 @@ function ToolInvocation({ toolType, toolName, state, input }: {
 
   if (state === "output-available") {
     return (
-      <div className="text-xs text-muted-foreground/70 flex items-center gap-1.5 py-1.5 px-2 bg-muted/30 rounded-lg my-1">
-        {icon}
-        <span className="font-medium">{displayName}</span>
-        {inputContext && <span className="text-muted-foreground/50 truncate max-w-[200px]">&ldquo;{inputContext}&rdquo;</span>}
+      <div className="text-xs flex items-center gap-1.5 py-1.5 px-2 rounded-lg my-1">
+        <span className="text-[#0A4EAA]">{icon}</span>
+        <span className="font-medium text-[#0A4EAA]">{displayName}</span>
+        {inputContext && <span className="text-muted-foreground/60 truncate max-w-[200px]">&ldquo;{inputContext}&rdquo;</span>}
         <span className="text-green-500 ml-auto">✓</span>
       </div>
     );
   }
 
   return (
-    <div className="text-xs text-muted-foreground flex items-center gap-1.5 py-1.5 px-2 bg-muted/30 rounded-lg my-1 animate-pulse">
-      {icon}
-      <span className="font-medium">{displayName}</span>
-      {inputContext && <span className="text-muted-foreground/50 truncate max-w-[200px]">&ldquo;{inputContext}&rdquo;</span>}
-      <span className="ml-auto">...</span>
+    <div className="text-xs flex items-center gap-1.5 py-1.5 px-2 rounded-lg my-1 animate-pulse">
+      <span className="text-[#0A4EAA]">{icon}</span>
+      <span className="font-medium text-[#0A4EAA]">{displayName}</span>
+      {inputContext && <span className="text-muted-foreground/60 truncate max-w-[200px]">&ldquo;{inputContext}&rdquo;</span>}
+      <span className="ml-auto text-muted-foreground">...</span>
     </div>
   );
 }
@@ -200,7 +200,7 @@ export function Chat() {
           className="h-10 w-10 md:h-9 md:w-9 shadow-border-small hover:shadow-border-medium bg-background/80 backdrop-blur-sm border-0 hover:bg-background active:scale-95 md:hover:scale-[1.02] transition-all duration-150 ease"
         >
           <a
-            href="https://github.com/nozomio-labs/paulgraham-ai"
+            href="https://github.com/Habibi-7/personas-ai"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub repository"
@@ -231,16 +231,7 @@ export function Chat() {
                 </h1>
               </div>
               <p className="text-muted-foreground text-sm md:text-base animate-slide-up px-2" style={{ animationDelay: '50ms' }}>
-                Ask questions about startups, writing, technology, and life — grounded in 120+ essays. Powered by{" "}
-                <a
-                  href="https://trynia.ai"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline underline-offset-4 hover:text-foreground transition-colors"
-                >
-                  Nia
-                </a>
-                .
+                Ask questions about startups, writing, technology, and life — grounded in 220+ essays.
               </p>
             </div>
             <div className="w-full animate-slide-up" style={{ animationDelay: '100ms' }}>
@@ -269,8 +260,8 @@ export function Chat() {
                       size="icon"
                       className={cn(
                         "h-8 w-8 rounded-lg transition-all duration-200",
-                        input.trim() 
-                          ? "bg-foreground text-background hover:bg-foreground/90 shadow-sm" 
+                        input.trim()
+                          ? "bg-[#0A4EAA] text-white hover:bg-[#0A4EAA]/90 shadow-sm"
                           : "bg-muted text-muted-foreground cursor-not-allowed"
                       )}
                       disabled={!input.trim()}
@@ -329,7 +320,7 @@ export function Chat() {
                   className={cn(
                     "group",
                     m.role === "user" &&
-                      "bg-foreground text-background rounded-2xl p-3 md:p-4 ml-auto max-w-[90%] md:max-w-[75%] shadow-border-small font-medium text-sm md:text-base",
+                      "bg-[#0A4EAA] text-white rounded-2xl p-3 md:p-4 ml-auto max-w-[90%] md:max-w-[75%] shadow-border-small font-medium text-sm md:text-base",
                     m.role === "assistant" && "max-w-[95%] md:max-w-[85%] text-foreground/90 leading-relaxed text-sm md:text-base"
                   )}
                 >
@@ -367,12 +358,6 @@ export function Chat() {
                       feedback={feedbacks[m.id] || null}
                       onFeedback={(type) => handleFeedback(m.id, type)}
                     />
-                    <div className="mt-3 pt-3 border-t border-border/40 flex items-start gap-2 text-xs text-muted-foreground/70">
-                       <div className="mt-1 w-1.5 h-1.5 rounded-full bg-black dark:bg-white shrink-0" />
-                       <span>
-                         To reduce code hallucinations or give more reliable context to your coding agents, try <a href="https://trynia.ai" target="_blank" rel="noopener noreferrer" className="font-medium text-blue-500 hover:underline transition-all">Nia</a>.
-                       </span>
-                    </div>
                     </>
                   )}
                 </div>
@@ -431,8 +416,8 @@ export function Chat() {
                   size="icon"
                   className={cn(
                     "h-8 w-8 rounded-lg transition-all duration-200",
-                    input.trim() 
-                      ? "bg-foreground text-background hover:bg-foreground/90 shadow-sm" 
+                    input.trim()
+                      ? "bg-[#0A4EAA] text-white hover:bg-[#0A4EAA]/90 shadow-sm"
                       : "bg-muted text-muted-foreground cursor-not-allowed"
                   )}
                   disabled={!input.trim()}
@@ -448,28 +433,15 @@ export function Chat() {
       {!hasMessages && (
         <footer className="pb-8 text-center animate-fade-in" style={{ animationDelay: '200ms' }}>
           <p className="text-xs md:text-sm text-muted-foreground">
-            Powered by{" "}
+            Created by{" "}
             <a
-              href="https://trynia.ai"
+              href="https://github.com/Habibi-7"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 hover:text-foreground transition-colors"
+              className="underline underline-offset-4 transition-colors hover:text-[#0A4EAA]"
             >
-              Nia
+              Habib
             </a>
-            {" "}(
-            <a
-              href="https://nozomio.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-4 hover:text-foreground transition-colors"
-            >
-              Nozomio Labs
-            </a>
-            )
-          </p>
-          <p className="text-xs text-muted-foreground/60 mt-1">
-            Arlan Rakhmetzhanov Production
           </p>
         </footer>
       )}

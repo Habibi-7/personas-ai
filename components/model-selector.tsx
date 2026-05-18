@@ -8,11 +8,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Image from "next/image";
-import { 
-  SUPPORTED_MODELS, 
-  MODEL_DISPLAY_NAMES, 
+import {
+  SUPPORTED_MODELS,
+  MODEL_DISPLAY_NAMES,
   MODEL_LOGOS,
-  type SupportedModel 
+  type SupportedModel,
 } from "@/lib/constants";
 
 interface ModelSelectorProps {
@@ -33,7 +33,9 @@ export function ModelSelector({ selectedModel, onModelChange }: ModelSelectorPro
               height={20}
               className="rounded-sm"
             />
-            <span className="text-sm font-medium hidden sm:inline">{MODEL_DISPLAY_NAMES[selectedModel]}</span>
+            <span className="text-sm font-medium hidden sm:inline">
+              {MODEL_DISPLAY_NAMES[selectedModel]}
+            </span>
           </div>
         </SelectValue>
       </SelectTrigger>
