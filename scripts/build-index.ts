@@ -8,14 +8,10 @@
  */
 import { readdir, readFile, writeFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
-import { pipeline, env } from "@xenova/transformers";
-
-env.allowLocalModels = false;
-env.useBrowserCache = false;
+import { xenovaMiniLM } from "../lib/embedder";
 
 const ESSAYS_DIR = join(process.cwd(), "data", "essays");
 const INDEX_DIR = join(process.cwd(), "data", "index");
-const MODEL = "Xenova/all-MiniLM-L6-v2";
 const CHUNK_WORDS = 220;
 const OVERLAP_WORDS = 40;
 
@@ -61,8 +57,8 @@ function chunk(text: string, words = CHUNK_WORDS, overlap = OVERLAP_WORDS): stri
 
 async function main() {
   await mkdir(INDEX_DIR, { recursive: true });
-  console.log(`Loading model ${MODEL}...`);
-  const embedder = await pipeline("feature-extraction", MODEL);
+  console.log(`Loading embedder...`);
+  const embed = xenovaMiniLM();
 
   const files = (await readdir(ESSAYS_DIR)).filter((f) => f.endsWith(".md")).sort();
   console.log(`Indexing ${files.length} essays...`);
@@ -85,8 +81,7 @@ async function main() {
     const clean = stripMarkdown(body);
     const chunks = chunk(clean);
     for (let i = 0; i < chunks.length; i++) {
-      const out = await embedder(chunks[i], { pooling: "mean", normalize: true });
-      const vec = Array.from(out.data as Float32Array);
+      const vec = await embed(chunks[i]);
       entries.push({
         slug: fm.slug || file.replace(/\.md$/, ""),
         title: fm.title || file,
