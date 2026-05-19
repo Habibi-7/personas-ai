@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { Streamdown } from "streamdown";
 
 const toolIcons: Record<string, React.ReactNode> = {
+  multiSearchEssays: <SearchIcon className="h-3 w-3" />,
   searchEssays: <SearchIcon className="h-3 w-3" />,
   browseEssays: <BookOpenIcon className="h-3 w-3" />,
   listDirectory: <FileTextIcon className="h-3 w-3" />,
@@ -24,6 +25,7 @@ const toolIcons: Record<string, React.ReactNode> = {
 };
 
 const toolDisplayNames: Record<string, string> = {
+  multiSearchEssays: "Searching essays (multi-query)",
   searchEssays: "Searching essays",
   browseEssays: "Browsing essays",
   listDirectory: "Listing directory",
@@ -46,7 +48,12 @@ function ToolInvocation({ toolType, toolName, state, input }: {
   
   // Get query/path from input for context
   const inputObj = input as Record<string, unknown> | undefined;
-  const rawContext = inputObj?.query || inputObj?.path || inputObj?.pattern;
+  const queries = inputObj?.queries;
+  const rawContext =
+    inputObj?.query ||
+    inputObj?.path ||
+    inputObj?.pattern ||
+    (Array.isArray(queries) ? queries.join(" | ") : undefined);
   const inputContext = rawContext ? String(rawContext) : null;
 
   if (state === "output-available") {

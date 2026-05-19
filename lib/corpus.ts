@@ -82,6 +82,13 @@ export type CorpusDeps = {
 
 export type Corpus = {
   search(query: string, topK: number): Promise<SearchHit[]>;
+  /**
+   * Run several phrasings of a question in parallel; merge results by chunk
+   * id keeping the highest score, then apply the per-essay cap, then truncate
+   * to topK. Lifts recall when the user question and the essay's wording
+   * disagree.
+   */
+  multiSearch(queries: string[], topK: number, maxPerEssay?: number): Promise<SearchHit[]>;
   read(slugOrPath: string): Promise<EssayDoc>;
   list(prefix: string): Promise<ManifestEntry[]>;
   browse(): Promise<ManifestEntry[]>;
@@ -130,25 +137,25 @@ export function createCorpus(deps: CorpusDeps): Corpus {
     async search(query, topK) {
       const [chunks, qvec] = await Promise.all([loadChunks(), embedder(query)]);
       const scored = chunks.map((c) => ({ score: cosine(qvec, c.vec), c }));
-      scored.sort((a, b) => b.score - a.score);
+      return rankWithCap(scored, topK, maxChunksPerEssay);
+    },
 
-      const perEssay = new Map<string, number>();
-      const hits: SearchHit[] = [];
-      for (const { score, c } of scored) {
-        const n = perEssay.get(c.slug) ?? 0;
-        if (n >= maxChunksPerEssay) continue;
-        perEssay.set(c.slug, n + 1);
-        hits.push({
-          slug: c.slug,
-          title: c.title,
-          url: c.url,
-          score: Number(score.toFixed(4)),
-          chunkIdx: c.chunkIdx,
-          text: c.text,
-        });
-        if (hits.length >= topK) break;
-      }
-      return hits;
+    async multiSearch(queries, topK, maxPerEssay) {
+      if (queries.length === 0) return [];
+      const [chunks, qvecs] = await Promise.all([
+        loadChunks(),
+        Promise.all(queries.map((q) => embedder(q))),
+      ]);
+      // For each chunk, score = max cosine across all query vectors.
+      const scored = chunks.map((c) => {
+        let best = -Infinity;
+        for (const qv of qvecs) {
+          const s = cosine(qv, c.vec);
+          if (s > best) best = s;
+        }
+        return { score: best, c };
+      });
+      return rankWithCap(scored, topK, maxPerEssay ?? maxChunksPerEssay);
     },
 
     async read(slugOrPath) {
@@ -199,6 +206,31 @@ export function createCorpus(deps: CorpusDeps): Corpus {
 }
 
 // ---------- internals ----------
+
+function rankWithCap(
+  scored: Array<{ score: number; c: ChunkEntry }>,
+  topK: number,
+  maxPerEssay: number
+): SearchHit[] {
+  scored.sort((a, b) => b.score - a.score);
+  const perEssay = new Map<string, number>();
+  const hits: SearchHit[] = [];
+  for (const { score, c } of scored) {
+    const n = perEssay.get(c.slug) ?? 0;
+    if (n >= maxPerEssay) continue;
+    perEssay.set(c.slug, n + 1);
+    hits.push({
+      slug: c.slug,
+      title: c.title,
+      url: c.url,
+      score: Number(score.toFixed(4)),
+      chunkIdx: c.chunkIdx,
+      text: c.text,
+    });
+    if (hits.length >= topK) break;
+  }
+  return hits;
+}
 
 function cosine(a: number[], b: number[]): number {
   // Vectors are pre-normalized → dot product = cosine similarity.

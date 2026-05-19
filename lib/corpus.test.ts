@@ -95,6 +95,38 @@ describe("Corpus.search", () => {
   });
 });
 
+describe("Corpus.multiSearch", () => {
+  test("merges queries and dedups by chunk id", async () => {
+    const corpus = makeCorpus();
+    const hits = await corpus.multiSearch(["alpha one", "alpha two"], 10);
+    const ids = hits.map((h) => `${h.slug}|${h.chunkIdx}`);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  test("score is max across queries", async () => {
+    const corpus = makeCorpus();
+    const single = await corpus.search("alpha one", 5);
+    const multi = await corpus.multiSearch(["alpha one", "totally unrelated zzz"], 5);
+    const topSingle = single.find((h) => h.text === "alpha one");
+    const topMulti = multi.find((h) => h.text === "alpha one");
+    expect(topMulti).toBeDefined();
+    // Multi score must be >= single (max across queries).
+    expect(topMulti!.score).toBeGreaterThanOrEqual(topSingle!.score);
+  });
+
+  test("respects per-essay cap override", async () => {
+    const corpus = makeCorpus();
+    const hits = await corpus.multiSearch(["alpha"], 10, 1);
+    const alphaCount = hits.filter((h) => h.slug === "alpha").length;
+    expect(alphaCount).toBeLessThanOrEqual(1);
+  });
+
+  test("returns empty on empty queries", async () => {
+    const corpus = makeCorpus();
+    expect(await corpus.multiSearch([], 5)).toEqual([]);
+  });
+});
+
 describe("Corpus.read", () => {
   test("returns frontmatter title/url + stripped body", async () => {
     const corpus = makeCorpus();
