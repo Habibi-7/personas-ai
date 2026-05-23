@@ -126,7 +126,7 @@ function ToolInvocation({ toolType, toolName, state, input }: {
 
   if (state === "output-available") {
     return (
-      <div className="text-xs flex items-center gap-1.5 py-1.5 px-2 rounded-lg my-1">
+      <div className="text-xs flex items-center gap-1.5 py-1.5 px-2 border border-border bg-muted/40 my-1">
         <span className="text-foreground">{icon}</span>
         <span className="font-medium text-foreground">{displayName}</span>
         {inputContext && <span className="text-muted-foreground/60 truncate max-w-[200px]">&ldquo;{inputContext}&rdquo;</span>}
@@ -136,7 +136,7 @@ function ToolInvocation({ toolType, toolName, state, input }: {
   }
 
   return (
-    <div className="text-xs flex items-center gap-1.5 py-1.5 px-2 rounded-lg my-1 animate-pulse">
+    <div className="text-xs flex items-center gap-1.5 py-1.5 px-2 border border-border bg-muted/40 my-1 animate-pulse">
       <span className="text-foreground">{icon}</span>
       <span className="font-medium text-foreground">{displayName}</span>
       {inputContext && <span className="text-muted-foreground/60 truncate max-w-[200px]">&ldquo;{inputContext}&rdquo;</span>}
@@ -170,7 +170,7 @@ function MessageActions({ message, feedback, onFeedback }: {
     <div className="flex items-center gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
       <button
         onClick={handleCopy}
-        className="p-1.5 rounded-md text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 transition-colors"
+        className="p-1.5 text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 transition-colors"
         title="Copy"
       >
         {copied ? <CheckIcon className="h-3.5 w-3.5 text-foreground" /> : <CopyIcon className="h-3.5 w-3.5" />}
@@ -178,7 +178,7 @@ function MessageActions({ message, feedback, onFeedback }: {
       <button
         onClick={() => onFeedback("like")}
         className={cn(
-          "p-1.5 rounded-md transition-colors",
+          "p-1.5 transition-colors",
           feedback === "like" 
             ? "text-foreground bg-muted" 
             : "text-muted-foreground/60 hover:text-foreground hover:bg-muted/50"
@@ -190,7 +190,7 @@ function MessageActions({ message, feedback, onFeedback }: {
       <button
         onClick={() => onFeedback("dislike")}
         className={cn(
-          "p-1.5 rounded-md transition-colors",
+          "p-1.5 transition-colors",
           feedback === "dislike" 
             ? "text-red-500 bg-red-500/10" 
             : "text-muted-foreground/60 hover:text-foreground hover:bg-muted/50"
@@ -211,7 +211,7 @@ function PersonaAvatar({ persona, className }: { persona: PersonaSummary; classN
         alt={persona.name}
         width={128}
         height={128}
-        className={cn("rounded-full object-cover", className)}
+        className={cn("object-cover", className)}
         priority
         quality={100}
       />
@@ -224,13 +224,13 @@ function PersonaAvatar({ persona, className }: { persona: PersonaSummary; classN
       <img
         src={persona.avatarUrl}
         alt={persona.name}
-        className={cn("rounded-full object-cover", className)}
+        className={cn("object-cover", className)}
       />
     );
   }
 
   return (
-    <div className={cn("rounded-full bg-muted flex items-center justify-center font-serif font-semibold", className)}>
+    <div className={cn("bg-muted flex items-center justify-center font-mono font-semibold", className)}>
       {persona.name
         .split(/\s+/)
         .map((part) => part[0])
@@ -257,7 +257,7 @@ function PersonaSelector({
       <Select value={selectedPersona.id} onValueChange={onPersonaChange}>
         <SelectTrigger
           aria-label="Select persona"
-          className="w-auto max-w-[180px] border-0 bg-transparent focus:ring-0 focus:ring-offset-0 shadow-none h-9 px-2 cursor-pointer shrink-0"
+          className="w-auto max-w-[180px] border-0 bg-transparent focus:ring-0 focus:ring-offset-0 shadow-none h-9 px-2 cursor-pointer shrink-0 uppercase tracking-[0.08em]"
         >
           <SelectValue>
             <div className="flex items-center gap-2">
@@ -283,7 +283,7 @@ function PersonaSelector({
         <button
           type="button"
           onClick={onEditPersona}
-          className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           aria-label="Edit selected persona"
         >
           <PencilIcon className="h-4 w-4" />
@@ -381,7 +381,7 @@ function AddPersonaPanel({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 bg-background/90 flex items-center justify-center p-4">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
@@ -400,7 +400,7 @@ function AddPersonaPanel({
           ];
           await onSubmit({ name, description, avatarUrl, voicePrompt, linksText, documents });
         }}
-        className="w-full max-w-2xl max-h-[90dvh] overflow-y-auto rounded-2xl bg-background border border-border shadow-xl p-5 md:p-6 space-y-4"
+        className="w-full max-w-2xl max-h-[90dvh] overflow-y-auto bg-background border border-border shadow-border-medium p-5 md:p-6 space-y-4"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -420,7 +420,7 @@ function AddPersonaPanel({
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="Naval Ravikant"
-            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="w-full border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[2px] focus-visible:ring-ring/50"
             required
           />
         </label>
@@ -431,7 +431,7 @@ function AddPersonaPanel({
             value={description}
             onChange={(event) => setDescription(event.target.value)}
             placeholder="Investor, founder, writer, and podcaster"
-            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="w-full border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[2px] focus-visible:ring-ring/50"
           />
         </label>
 
@@ -441,7 +441,7 @@ function AddPersonaPanel({
             value={avatarUrl}
             onChange={(event) => setAvatarUrl(event.target.value)}
             placeholder="Optional"
-            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="w-full border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[2px] focus-visible:ring-ring/50"
           />
         </label>
 
@@ -452,17 +452,17 @@ function AddPersonaPanel({
             onChange={(event) => setLinksText(event.target.value)}
             placeholder={"https://nav.al/rich\nhttps://nav.al/specific-knowledge"}
             rows={5}
-            className="w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="w-full resize-y border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[2px] focus-visible:ring-ring/50"
           />
         </label>
 
-        <div className="space-y-2 rounded-xl border border-border p-3">
+        <div className="space-y-2 border border-border p-3">
           <div className="flex items-center justify-between gap-2">
             <div>
               <p className="text-sm font-medium">Document sources</p>
               <p className="text-xs text-muted-foreground">Paste text/markdown or upload local text files.</p>
             </div>
-            <label className="inline-flex h-8 items-center justify-center gap-2 rounded-md border bg-background px-3 text-sm font-medium transition-colors hover:bg-accent cursor-pointer">
+            <label className="inline-flex h-8 items-center justify-center gap-2 border bg-background px-3 text-sm font-medium uppercase tracking-[0.08em] transition-colors hover:bg-accent cursor-pointer">
               <UploadIcon className="h-4 w-4" />
               Upload
               <input
@@ -483,7 +483,7 @@ function AddPersonaPanel({
               {files.map((file, index) => (
                 <div
                   key={`${file.name}-${file.lastModified}-${index}`}
-                  className="inline-flex max-w-full items-center gap-2 rounded-full border border-border bg-muted px-3 py-1.5 text-xs"
+                  className="inline-flex max-w-full items-center gap-2 border border-border bg-muted px-3 py-1.5 text-xs"
                 >
                   <FileTextIcon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                   <span className="max-w-[220px] truncate font-medium">{file.name}</span>
@@ -491,7 +491,7 @@ function AddPersonaPanel({
                   <button
                     type="button"
                     onClick={() => removeFile(index)}
-                    className="ml-1 rounded-full p-0.5 text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+                    className="ml-1 p-0.5 text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
                     aria-label={`Remove ${file.name}`}
                     disabled={isCreating}
                   >
@@ -505,14 +505,14 @@ function AddPersonaPanel({
             value={documentTitle}
             onChange={(event) => setDocumentTitle(event.target.value)}
             placeholder="Document title"
-            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="w-full border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[2px] focus-visible:ring-ring/50"
           />
           <textarea
             value={documentText}
             onChange={(event) => setDocumentText(event.target.value)}
             placeholder="Paste markdown or plain text here..."
             rows={4}
-            className="w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="w-full resize-y border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[2px] focus-visible:ring-ring/50"
           />
         </div>
 
@@ -523,7 +523,7 @@ function AddPersonaPanel({
             onChange={(event) => setVoicePrompt(event.target.value)}
             placeholder="Optional. Leave blank to generate a simple grounded persona prompt."
             rows={3}
-            className="w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            className="w-full resize-y border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[2px] focus-visible:ring-ring/50"
           />
         </label>
 
@@ -810,7 +810,7 @@ export function Chat() {
           onClick={handleNewChat}
           variant="outline"
           size="icon"
-          className="h-10 w-10 md:h-9 md:w-9 shadow-border-small hover:shadow-border-medium bg-background/80 backdrop-blur-sm border-0 hover:bg-background active:scale-95 md:hover:scale-[1.02] transition-all duration-150 ease"
+          className="h-10 w-10 md:h-9 md:w-9 shadow-border-small hover:shadow-border-medium bg-background border-0 hover:bg-accent active:scale-95 transition-all duration-150 ease"
         >
           <PlusIcon className="h-4 w-4" />
         </Button>
@@ -818,7 +818,7 @@ export function Chat() {
           onClick={openCreatePersona}
           variant="outline"
           size="icon"
-          className="h-10 w-10 md:h-9 md:w-9 shadow-border-small hover:shadow-border-medium bg-background/80 backdrop-blur-sm border-0 hover:bg-background active:scale-95 md:hover:scale-[1.02] transition-all duration-150 ease"
+          className="h-10 w-10 md:h-9 md:w-9 shadow-border-small hover:shadow-border-medium bg-background border-0 hover:bg-accent active:scale-95 transition-all duration-150 ease"
           aria-label="Add persona"
         >
           <UserPlusIcon className="h-4 w-4" />
@@ -827,7 +827,7 @@ export function Chat() {
           asChild
           variant="outline"
           size="icon"
-          className="h-10 w-10 md:h-9 md:w-9 shadow-border-small hover:shadow-border-medium bg-background/80 backdrop-blur-sm border-0 hover:bg-background active:scale-95 md:hover:scale-[1.02] transition-all duration-150 ease"
+          className="h-10 w-10 md:h-9 md:w-9 shadow-border-small hover:shadow-border-medium bg-background border-0 hover:bg-accent active:scale-95 transition-all duration-150 ease"
         >
           <a
             href="https://github.com/Habibi-7/personas-ai"
@@ -850,10 +850,10 @@ export function Chat() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 animate-slide-up">
                 <PersonaAvatar
                   persona={selectedPersona}
-                  className="shadow-lg w-14 h-14 md:w-16 md:h-16 text-xl"
+                  className="shadow-border-small w-14 h-14 md:w-16 md:h-16 text-xl"
                 />
-                <h1 className="text-3xl sm:text-4xl md:text-6xl font-light tracking-tight text-foreground">
-                  <span className="font-serif font-semibold tracking-tight">
+                <h1 className="pixel-title text-3xl sm:text-4xl md:text-6xl font-semibold tracking-[-0.08em] text-foreground">
+                  <span>
                     {selectedPersona.name} Agent
                   </span>
                 </h1>
@@ -878,7 +878,7 @@ export function Chat() {
             </div>
             <div className="w-full animate-slide-up" style={{ animationDelay: '100ms' }}>
               <form onSubmit={handleSubmit}>
-                <div className="relative rounded-2xl bg-background border border-border shadow-sm hover:shadow-md focus-within:shadow-md focus-within:border-foreground/30 transition-all duration-200">
+                <div className="relative bg-background border border-border shadow-border-small hover:shadow-border-medium focus-within:shadow-border-medium focus-within:border-foreground/30 transition-all duration-200">
                   <textarea
                     ref={textareaRef}
                     name="prompt"
@@ -887,7 +887,7 @@ export function Chat() {
                     value={input}
                     autoFocus
                     rows={1}
-                    className="w-full resize-none bg-transparent px-4 pt-4 pb-14 text-[16px] md:text-base placeholder:text-muted-foreground/50 focus:outline-none min-h-[56px] max-h-[200px]"
+                    className="readable-text w-full resize-none bg-transparent px-4 pt-4 pb-14 text-[16px] md:text-base placeholder:text-muted-foreground/50 focus:outline-none min-h-[56px] max-h-[200px]"
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault();
@@ -908,9 +908,9 @@ export function Chat() {
                       type="submit"
                       size="icon"
                       className={cn(
-                        "h-8 w-8 rounded-lg transition-all duration-200",
+                        "h-8 w-8 transition-all duration-200",
                         input.trim()
-                          ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+                          ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-border-small"
                           : "bg-muted text-muted-foreground cursor-not-allowed"
                       )}
                       disabled={!input.trim()}
@@ -928,7 +928,7 @@ export function Chat() {
                   onClick={() => {
                     setInput(prompt);
                   }}
-                  className="p-3 rounded-xl text-left text-muted-foreground hover:text-foreground active:bg-muted/70 hover:bg-muted/50 transition-colors"
+                  className="readable-text p-3 border border-border text-left text-muted-foreground hover:text-foreground active:bg-muted/70 hover:bg-muted/50 transition-colors"
                 >
                   &ldquo;{prompt}&rdquo;
                 </button>
@@ -946,9 +946,9 @@ export function Chat() {
                 <div
                   key={m.id}
                   className={cn(
-                    "group",
+                    "group readable-text",
                     m.role === "user" &&
-                      "bg-primary text-primary-foreground rounded-2xl p-3 md:p-4 ml-auto max-w-[90%] md:max-w-[75%] shadow-border-small font-medium text-sm md:text-base",
+                      "bg-primary text-primary-foreground p-3 md:p-4 ml-auto max-w-[90%] md:max-w-[75%] shadow-border-small font-medium text-sm md:text-base",
                     m.role === "assistant" && "max-w-[95%] md:max-w-[85%] text-foreground/90 leading-relaxed text-sm md:text-base"
                   )}
                 >
@@ -1021,7 +1021,7 @@ export function Chat() {
       {hasMessages && (
         <div className="w-full max-w-4xl mx-auto px-4 md:px-8 pb-4 md:pb-6 pt-2">
           <form onSubmit={handleSubmit}>
-            <div className="relative rounded-2xl bg-background border border-border shadow-sm hover:shadow-md focus-within:shadow-md focus-within:border-foreground/30 transition-all duration-200">
+            <div className="relative bg-background border border-border shadow-border-small hover:shadow-border-medium focus-within:shadow-border-medium focus-within:border-foreground/30 transition-all duration-200">
               <textarea
                 ref={textareaRef}
                 name="prompt"
@@ -1029,7 +1029,7 @@ export function Chat() {
                 onChange={(e) => setInput(e.target.value)}
                 value={input}
                 rows={1}
-                className="w-full resize-none bg-transparent px-4 pt-3 pb-12 text-[16px] md:text-base placeholder:text-muted-foreground/50 focus:outline-none min-h-[52px] max-h-[200px]"
+                className="readable-text w-full resize-none bg-transparent px-4 pt-3 pb-12 text-[16px] md:text-base placeholder:text-muted-foreground/50 focus:outline-none min-h-[52px] max-h-[200px]"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -1050,9 +1050,9 @@ export function Chat() {
                   type="submit"
                   size="icon"
                   className={cn(
-                    "h-8 w-8 rounded-lg transition-all duration-200",
+                    "h-8 w-8 transition-all duration-200",
                     input.trim()
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-border-small"
                       : "bg-muted text-muted-foreground cursor-not-allowed"
                   )}
                   disabled={!input.trim()}
