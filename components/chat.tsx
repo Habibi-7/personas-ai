@@ -22,6 +22,7 @@ import {
   PencilIcon,
   Trash2Icon,
   UploadIcon,
+  SquareIcon,
 } from "lucide-react";
 import { DEFAULT_MODEL, type SupportedModel } from "@/lib/constants";
 import Image from "next/image";
@@ -100,6 +101,116 @@ const toolDisplayNames: Record<string, string> = {
   grepEssays: "Pattern search",
   webSearch: "Web search",
 };
+
+function MarkdownText({ text }: { text: string }) {
+  const lines = text.split("\n");
+
+  return (
+    <div className="readable-text space-y-2 break-words">
+      {lines.map((line, index) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={index} className="h-2" />;
+
+        const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
+        if (heading) {
+          const HeadingTag = heading[1].length === 1 ? "h2" : heading[1].length === 2 ? "h3" : "h4";
+          return (
+            <HeadingTag key={index} className="mt-3 font-semibold tracking-[-0.03em] text-foreground">
+              {renderInlineMarkdown(heading[2], index)}
+            </HeadingTag>
+          );
+        }
+
+        const bullet = trimmed.match(/^[-*]\s+(.+)$/);
+        if (bullet) {
+          return (
+            <div key={index} className="flex gap-2">
+              <span className="text-muted-foreground">-</span>
+              <span>{renderInlineMarkdown(bullet[1], index)}</span>
+            </div>
+          );
+        }
+
+        const numbered = trimmed.match(/^\d+[.)]\s+(.+)$/);
+        if (numbered) {
+          return (
+            <div key={index} className="flex gap-2">
+              <span className="text-muted-foreground">{trimmed.match(/^\d+/)?.[0]}.</span>
+              <span>{renderInlineMarkdown(numbered[1], index)}</span>
+            </div>
+          );
+        }
+
+        const quote = trimmed.match(/^>\s+(.+)$/);
+        if (quote) {
+          return (
+            <blockquote key={index} className="border-l border-border pl-3 text-muted-foreground">
+              {renderInlineMarkdown(quote[1], index)}
+            </blockquote>
+          );
+        }
+
+        return <p key={index}>{renderInlineMarkdown(trimmed, index)}</p>;
+      })}
+    </div>
+  );
+}
+
+function renderInlineMarkdown(text: string, lineIndex: number) {
+  const parts: React.ReactNode[] = [];
+  const pattern = /(\*\*([^*]+)\*\*|`([^`]+)`|\[([^\]]+)\]\(([^)]+)\))/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = pattern.exec(text))) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+
+    if (match[2]) {
+      parts.push(
+        <strong key={`${lineIndex}-${match.index}`} className="font-semibold text-foreground">
+          {match[2]}
+        </strong>
+      );
+    } else if (match[3]) {
+      parts.push(
+        <code key={`${lineIndex}-${match.index}`} className="bg-muted px-1 text-[0.95em] text-foreground">
+          {match[3]}
+        </code>
+      );
+    } else if (match[4] && match[5]) {
+      const href = safeHref(match[5]);
+      parts.push(
+        href ? (
+          <a
+            key={`${lineIndex}-${match.index}`}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-4 hover:text-foreground"
+          >
+            {match[4]}
+          </a>
+        ) : (
+          match[4]
+        )
+      );
+    }
+
+    lastIndex = pattern.lastIndex;
+  }
+
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts;
+}
+
+function safeHref(href: string) {
+  try {
+    const parsed = new URL(href);
+    return ["http:", "https:", "mailto:"].includes(parsed.protocol) ? parsed.toString() : null;
+  } catch {
+    return null;
+  }
+}
 
 function ToolInvocation({ toolType, toolName, state, input }: { 
   toolType: string;
@@ -580,6 +691,7 @@ export function Chat() {
 
   const { messages, error, sendMessage, regenerate, setMessages, stop, status } = useChat();
   const selectedPersona = personas.find((persona) => persona.id === selectedPersonaId) ?? personas[0] ?? fallbackPersona;
+  const isRunning = status === "submitted" || status === "streaming";
 
   const handleFeedback = (messageId: string, type: "like" | "dislike") => {
     setFeedbacks((prev) => ({
@@ -904,17 +1016,21 @@ export function Chat() {
                       onModelChange={setSelectedModel}
                     />
                     <Button
-                      type="submit"
+                      type={isRunning ? "button" : "submit"}
                       size="icon"
+                      onClick={isRunning ? stop : undefined}
+                      aria-label={isRunning ? "Stop generation" : "Send message"}
                       className={cn(
                         "h-8 w-8 transition-all duration-200",
-                        input.trim()
+                        isRunning
+                          ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-border-small"
+                          : input.trim()
                           ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-border-small"
                           : "bg-muted text-muted-foreground cursor-not-allowed"
                       )}
-                      disabled={!input.trim()}
+                      disabled={!isRunning && !input.trim()}
                     >
-                      <ArrowUpIcon className="h-4 w-4" />
+                      {isRunning ? <SquareIcon className="h-3.5 w-3.5 fill-current" /> : <ArrowUpIcon className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
@@ -955,9 +1071,7 @@ export function Chat() {
                     switch (part.type) {
                       case "text":
                         return m.role === "assistant" ? (
-                          <div key={`${m.id}-${i}`} className="readable-text whitespace-pre-wrap break-words">
-                            {part.text}
-                          </div>
+                          <MarkdownText key={`${m.id}-${i}`} text={part.text} />
                         ) : (
                           <div key={`${m.id}-${i}`}>{part.text}</div>
                         );
@@ -1046,17 +1160,21 @@ export function Chat() {
                   onModelChange={setSelectedModel}
                 />
                 <Button
-                  type="submit"
+                  type={isRunning ? "button" : "submit"}
                   size="icon"
+                  onClick={isRunning ? stop : undefined}
+                  aria-label={isRunning ? "Stop generation" : "Send message"}
                   className={cn(
                     "h-8 w-8 transition-all duration-200",
-                    input.trim()
+                    isRunning
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-border-small"
+                      : input.trim()
                       ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-border-small"
                       : "bg-muted text-muted-foreground cursor-not-allowed"
                   )}
-                  disabled={!input.trim()}
+                  disabled={!isRunning && !input.trim()}
                 >
-                  <ArrowUpIcon className="h-4 w-4" />
+                  {isRunning ? <SquareIcon className="h-3.5 w-3.5 fill-current" /> : <ArrowUpIcon className="h-4 w-4" />}
                 </Button>
               </div>
             </div>
