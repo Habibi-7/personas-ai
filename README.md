@@ -1,4 +1,4 @@
-# Personas AI
+# Persona Generator
 
 Local-first AI personas grounded in source documents you provide. The repo ships with a Paul Graham persona backed by ~220 essays, and you can add new personas from pasted URLs.
 
@@ -54,14 +54,15 @@ bun run dev
 
 ## Adding Personas
 
-Click **Add Persona**, enter a name, and paste one source URL per line. The app will:
+Click **Add Persona**, enter a name, and paste source URLs or upload/paste local documents. The app will:
 
 1. Create `data/personas/<persona-id>/persona.json`.
 2. Run Defuddle for each URL and save markdown into `documents/`.
-3. Build `index/embeddings.json` and `index/manifest.json`.
-4. Add the persona to the selector.
+3. Save uploaded/pasted documents into the same `documents/` folder.
+4. Build `index/embeddings.json` and `index/manifest.json`.
+5. Add the persona to the selector.
 
-Generated persona data is local to your clone. You can edit the markdown files directly and rerun `bun run index <persona-id>`.
+Generated persona data is local to your clone. You can edit/delete personas from the UI, add more URL or document sources later, or edit the markdown files directly and rerun `bun run index <persona-id>`.
 
 ## Credits
 

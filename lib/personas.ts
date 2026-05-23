@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
@@ -120,6 +120,43 @@ export async function createPersona(input: {
   await mkdir(indexDir, { recursive: true });
   await writeFile(personaFile, `${JSON.stringify(persona, null, 2)}\n`, "utf8");
   return persona;
+}
+
+export async function updatePersona(
+  personaId: string,
+  input: Partial<Pick<Persona, "name" | "description" | "avatarUrl" | "voicePrompt">>
+): Promise<Persona> {
+  const id = safePersonaId(personaId);
+  if (id === DEFAULT_PERSONA_ID) {
+    throw new Error("The bundled Paul Graham persona cannot be edited.");
+  }
+
+  const current = await getPersona(id);
+  const next: Persona = {
+    ...current,
+    name: input.name?.trim() || current.name,
+    description: input.description?.trim() || current.description,
+    avatarUrl: input.avatarUrl?.trim() || undefined,
+    voicePrompt: input.voicePrompt?.trim() || current.voicePrompt,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const { personaFile } = personaPaths(id);
+  await writeFile(personaFile, `${JSON.stringify(next, null, 2)}\n`, "utf8");
+  return next;
+}
+
+export async function deletePersona(personaId: string): Promise<void> {
+  const id = safePersonaId(personaId);
+  if (id === DEFAULT_PERSONA_ID) {
+    throw new Error("The bundled Paul Graham persona cannot be deleted.");
+  }
+
+  const { rootDir } = personaPaths(id);
+  if (!existsSync(rootDir)) {
+    throw new Error(`Persona not found: ${id}`);
+  }
+  await rm(rootDir, { recursive: true, force: true });
 }
 
 export function safePersonaId(value: string): string {

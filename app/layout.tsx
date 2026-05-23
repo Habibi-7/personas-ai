@@ -15,17 +15,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Paul Graham Agent",
-  description: "Ask Paul Graham anything — an AI agent grounded in 220+ essays.",
+  title: "Persona Generator",
+  description: "Build and chat with AI personas grounded in sources you choose.",
   openGraph: {
-    title: "Paul Graham Agent",
-    description: "Ask Paul Graham anything — an AI agent grounded in 220+ essays.",
+    title: "Persona Generator",
+    description: "Build and chat with AI personas grounded in sources you choose.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Paul Graham Agent",
-    description: "Ask Paul Graham anything — an AI agent grounded in 220+ essays.",
+    title: "Persona Generator",
+    description: "Build and chat with AI personas grounded in sources you choose.",
   },
 };
 

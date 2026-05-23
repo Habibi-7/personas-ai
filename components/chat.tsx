@@ -19,6 +19,9 @@ import {
   UserPlusIcon,
   Loader2Icon,
   XIcon,
+  PencilIcon,
+  Trash2Icon,
+  UploadIcon,
 } from "lucide-react";
 import { DEFAULT_MODEL, type SupportedModel } from "@/lib/constants";
 import Image from "next/image";
@@ -41,10 +44,17 @@ type PersonaSummary = {
   name: string;
   description: string;
   avatarUrl?: string;
+  voicePrompt: string;
   documentLabel: string;
   examplePrompts: string[];
   documentCount: number;
   indexed: boolean;
+};
+
+type SourceDocumentDraft = {
+  title?: string;
+  content: string;
+  url?: string;
 };
 
 const fallbackPersona: PersonaSummary = {
@@ -52,6 +62,8 @@ const fallbackPersona: PersonaSummary = {
   name: "Paul Graham",
   description: "Grounded in 220+ Paul Graham essays.",
   avatarUrl: "/pg.png",
+  voicePrompt:
+    "Direct and concise, like Paul Graham. Short sentences. Concrete examples. Avoid corporate speak, jargon, and hedging.",
   documentLabel: "essays",
   examplePrompts: [
     "What is Collison installation?",
@@ -62,6 +74,13 @@ const fallbackPersona: PersonaSummary = {
   documentCount: 0,
   indexed: true,
 };
+
+const neutralPrompts = [
+  "What are this persona's core ideas?",
+  "What would this persona say about making decisions?",
+  "Summarize the strongest themes in the sources.",
+  "What advice does this persona repeat most?",
+];
 
 const toolIcons: Record<string, React.ReactNode> = {
   multiSearchEssays: <SearchIcon className="h-3 w-3" />,
@@ -108,18 +127,18 @@ function ToolInvocation({ toolType, toolName, state, input }: {
   if (state === "output-available") {
     return (
       <div className="text-xs flex items-center gap-1.5 py-1.5 px-2 rounded-lg my-1">
-        <span className="text-[#0A4EAA]">{icon}</span>
-        <span className="font-medium text-[#0A4EAA]">{displayName}</span>
+        <span className="text-foreground">{icon}</span>
+        <span className="font-medium text-foreground">{displayName}</span>
         {inputContext && <span className="text-muted-foreground/60 truncate max-w-[200px]">&ldquo;{inputContext}&rdquo;</span>}
-        <span className="text-green-500 ml-auto">✓</span>
+        <span className="text-muted-foreground ml-auto">✓</span>
       </div>
     );
   }
 
   return (
     <div className="text-xs flex items-center gap-1.5 py-1.5 px-2 rounded-lg my-1 animate-pulse">
-      <span className="text-[#0A4EAA]">{icon}</span>
-      <span className="font-medium text-[#0A4EAA]">{displayName}</span>
+      <span className="text-foreground">{icon}</span>
+      <span className="font-medium text-foreground">{displayName}</span>
       {inputContext && <span className="text-muted-foreground/60 truncate max-w-[200px]">&ldquo;{inputContext}&rdquo;</span>}
       <span className="ml-auto text-muted-foreground">...</span>
     </div>
@@ -154,14 +173,14 @@ function MessageActions({ message, feedback, onFeedback }: {
         className="p-1.5 rounded-md text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 transition-colors"
         title="Copy"
       >
-        {copied ? <CheckIcon className="h-3.5 w-3.5 text-green-500" /> : <CopyIcon className="h-3.5 w-3.5" />}
+        {copied ? <CheckIcon className="h-3.5 w-3.5 text-foreground" /> : <CopyIcon className="h-3.5 w-3.5" />}
       </button>
       <button
         onClick={() => onFeedback("like")}
         className={cn(
           "p-1.5 rounded-md transition-colors",
           feedback === "like" 
-            ? "text-green-500 bg-green-500/10" 
+            ? "text-foreground bg-muted" 
             : "text-muted-foreground/60 hover:text-foreground hover:bg-muted/50"
         )}
         title="Good response"
@@ -222,14 +241,100 @@ function PersonaAvatar({ persona, className }: { persona: PersonaSummary; classN
   );
 }
 
+function PersonaSelector({
+  personas,
+  selectedPersona,
+  onPersonaChange,
+  onEditPersona,
+}: {
+  personas: PersonaSummary[];
+  selectedPersona: PersonaSummary;
+  onPersonaChange: (personaId: string) => void;
+  onEditPersona: () => void;
+}) {
+  return (
+    <div className="flex items-center gap-1">
+      <Select value={selectedPersona.id} onValueChange={onPersonaChange}>
+        <SelectTrigger
+          aria-label="Select persona"
+          className="w-auto max-w-[180px] border-0 bg-transparent focus:ring-0 focus:ring-offset-0 shadow-none h-9 px-2 cursor-pointer shrink-0"
+        >
+          <SelectValue>
+            <div className="flex items-center gap-2">
+              <PersonaAvatar persona={selectedPersona} className="h-5 w-5 text-[10px]" />
+              <span className="text-sm font-medium hidden sm:inline truncate">
+                {selectedPersona.name}
+              </span>
+            </div>
+          </SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          {personas.map((persona) => (
+            <SelectItem key={persona.id} value={persona.id}>
+              <div className="flex items-center gap-2">
+                <PersonaAvatar persona={persona} className="h-5 w-5 text-[10px]" />
+                <span>{persona.name}</span>
+              </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {selectedPersona.id !== "paul-graham" && (
+        <button
+          type="button"
+          onClick={onEditPersona}
+          className="rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          aria-label="Edit selected persona"
+        >
+          <PencilIcon className="h-4 w-4" />
+        </button>
+      )}
+    </div>
+  );
+}
+
+function ComposerControls({
+  personas,
+  selectedPersona,
+  selectedModel,
+  onPersonaChange,
+  onEditPersona,
+  onModelChange,
+}: {
+  personas: PersonaSummary[];
+  selectedPersona: PersonaSummary;
+  selectedModel: SupportedModel;
+  onPersonaChange: (personaId: string) => void;
+  onEditPersona: () => void;
+  onModelChange: (model: SupportedModel) => void;
+}) {
+  return (
+    <div className="flex min-w-0 items-center gap-1">
+      <PersonaSelector
+        personas={personas}
+        selectedPersona={selectedPersona}
+        onPersonaChange={onPersonaChange}
+        onEditPersona={onEditPersona}
+      />
+      <div className="h-5 w-px bg-border" />
+      <ModelSelector selectedModel={selectedModel} onModelChange={onModelChange} />
+    </div>
+  );
+}
+
 function AddPersonaPanel({
   isOpen,
+  mode,
+  persona,
   isCreating,
   error,
   onClose,
   onSubmit,
+  onDelete,
 }: {
   isOpen: boolean;
+  mode: "create" | "edit";
+  persona?: PersonaSummary;
   isCreating: boolean;
   error: string | null;
   onClose: () => void;
@@ -239,30 +344,69 @@ function AddPersonaPanel({
     avatarUrl: string;
     voicePrompt: string;
     linksText: string;
+    documents: SourceDocumentDraft[];
   }) => Promise<void>;
+  onDelete?: () => Promise<void>;
 }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [voicePrompt, setVoicePrompt] = useState("");
   const [linksText, setLinksText] = useState("");
+  const [documentTitle, setDocumentTitle] = useState("");
+  const [documentText, setDocumentText] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setName(mode === "edit" ? persona?.name ?? "" : "");
+    setDescription(mode === "edit" ? persona?.description ?? "" : "");
+    setAvatarUrl(mode === "edit" ? persona?.avatarUrl ?? "" : "");
+    setVoicePrompt(mode === "edit" ? persona?.voicePrompt ?? "" : "");
+    setLinksText("");
+    setDocumentTitle("");
+    setDocumentText("");
+    setFiles([]);
+  }, [isOpen, mode, persona]);
 
   if (!isOpen) return null;
+
+  const title = mode === "edit" ? "Edit Persona" : "Add Persona";
+  const helpText =
+    mode === "edit"
+      ? "Update metadata or add more URL/document sources. New sources rebuild the local index."
+      : "Paste URLs or add documents. Defuddle turns URLs into markdown, then the app builds embeddings.";
+  const removeFile = (index: number) => {
+    setFiles((current) => current.filter((_, fileIndex) => fileIndex !== index));
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          await onSubmit({ name, description, avatarUrl, voicePrompt, linksText });
+          const fileDocuments = await Promise.all(
+            files.map(async (file) => ({
+              title: file.name.replace(/\.[^.]+$/, ""),
+              content: await file.text(),
+              url: `file:${file.name}`,
+            }))
+          );
+          const documents = [
+            ...fileDocuments,
+            ...(documentText.trim()
+              ? [{ title: documentTitle.trim() || "Pasted document", content: documentText }]
+              : []),
+          ];
+          await onSubmit({ name, description, avatarUrl, voicePrompt, linksText, documents });
         }}
-        className="w-full max-w-2xl rounded-2xl bg-background border border-border shadow-xl p-5 md:p-6 space-y-4"
+        className="w-full max-w-2xl max-h-[90dvh] overflow-y-auto rounded-2xl bg-background border border-border shadow-xl p-5 md:p-6 space-y-4"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold">Add Persona</h2>
+            <h2 className="text-lg font-semibold">{title}</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Paste source links. Defuddle turns them into local markdown, then the app builds embeddings.
+              {helpText}
             </p>
           </div>
           <Button type="button" variant="ghost" size="icon" onClick={onClose} disabled={isCreating}>
@@ -309,9 +453,68 @@ function AddPersonaPanel({
             placeholder={"https://nav.al/rich\nhttps://nav.al/specific-knowledge"}
             rows={5}
             className="w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            required
           />
         </label>
+
+        <div className="space-y-2 rounded-xl border border-border p-3">
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <p className="text-sm font-medium">Document sources</p>
+              <p className="text-xs text-muted-foreground">Paste text/markdown or upload local text files.</p>
+            </div>
+            <label className="inline-flex h-8 items-center justify-center gap-2 rounded-md border bg-background px-3 text-sm font-medium transition-colors hover:bg-accent cursor-pointer">
+              <UploadIcon className="h-4 w-4" />
+              Upload
+              <input
+                type="file"
+                multiple
+                accept=".md,.txt,.markdown,text/markdown,text/plain"
+                className="sr-only"
+                onChange={(event) => {
+                  const selected = Array.from(event.target.files ?? []);
+                  setFiles((current) => [...current, ...selected]);
+                  event.target.value = "";
+                }}
+              />
+            </label>
+          </div>
+          {files.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {files.map((file, index) => (
+                <div
+                  key={`${file.name}-${file.lastModified}-${index}`}
+                  className="inline-flex max-w-full items-center gap-2 rounded-full border border-border bg-muted px-3 py-1.5 text-xs"
+                >
+                  <FileTextIcon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                  <span className="max-w-[220px] truncate font-medium">{file.name}</span>
+                  <span className="shrink-0 text-muted-foreground">{formatFileSize(file.size)}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeFile(index)}
+                    className="ml-1 rounded-full p-0.5 text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+                    aria-label={`Remove ${file.name}`}
+                    disabled={isCreating}
+                  >
+                    <XIcon className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <input
+            value={documentTitle}
+            onChange={(event) => setDocumentTitle(event.target.value)}
+            placeholder="Document title"
+            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          />
+          <textarea
+            value={documentText}
+            onChange={(event) => setDocumentText(event.target.value)}
+            placeholder="Paste markdown or plain text here..."
+            rows={4}
+            className="w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          />
+        </div>
 
         <label className="block space-y-1.5">
           <span className="text-sm font-medium">Voice prompt</span>
@@ -331,18 +534,36 @@ function AddPersonaPanel({
           </Alert>
         )}
 
-        <div className="flex justify-end gap-2">
-          <Button type="button" variant="outline" onClick={onClose} disabled={isCreating}>
-            Cancel
-          </Button>
-          <Button type="submit" disabled={isCreating}>
-            {isCreating && <Loader2Icon className="h-4 w-4 animate-spin" />}
-            {isCreating ? "Building..." : "Build Persona"}
-          </Button>
+        <div className="flex items-center justify-between gap-2">
+          {mode === "edit" && onDelete ? (
+            <Button type="button" variant="destructive" onClick={onDelete} disabled={isCreating}>
+              <Trash2Icon className="h-4 w-4" />
+              Delete
+            </Button>
+          ) : (
+            <span />
+          )}
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={onClose} disabled={isCreating}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isCreating}>
+              {isCreating && <Loader2Icon className="h-4 w-4 animate-spin" />}
+              {isCreating ? "Building..." : mode === "edit" ? "Save Persona" : "Build Persona"}
+            </Button>
+          </div>
         </div>
       </form>
     </div>
   );
+}
+
+function formatFileSize(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${kb.toFixed(kb < 10 ? 1 : 0)} KB`;
+  const mb = kb / 1024;
+  return `${mb.toFixed(mb < 10 ? 1 : 0)} MB`;
 }
 
 export function Chat() {
@@ -352,6 +573,7 @@ export function Chat() {
   const [personas, setPersonas] = useState<PersonaSummary[]>([fallbackPersona]);
   const [selectedPersonaId, setSelectedPersonaId] = useState(fallbackPersona.id);
   const [isAddPersonaOpen, setIsAddPersonaOpen] = useState(false);
+  const [personaPanelMode, setPersonaPanelMode] = useState<"create" | "edit">("create");
   const [isCreatingPersona, setIsCreatingPersona] = useState(false);
   const [createPersonaError, setCreatePersonaError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -406,6 +628,18 @@ export function Chat() {
     setSelectedPersonaId(personaId);
   };
 
+  const openCreatePersona = () => {
+    setCreatePersonaError(null);
+    setPersonaPanelMode("create");
+    setIsAddPersonaOpen(true);
+  };
+
+  const openEditPersona = () => {
+    setCreatePersonaError(null);
+    setPersonaPanelMode("edit");
+    setIsAddPersonaOpen(true);
+  };
+
   const adjustTextareaHeight = useCallback(() => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -434,12 +668,14 @@ export function Chat() {
     avatarUrl,
     voicePrompt,
     linksText,
+    documents,
   }: {
     name: string;
     description: string;
     avatarUrl: string;
     voicePrompt: string;
     linksText: string;
+    documents: SourceDocumentDraft[];
   }) => {
     setCreatePersonaError(null);
     const links = linksText
@@ -447,8 +683,8 @@ export function Chat() {
       .map((link) => link.trim())
       .filter(Boolean);
 
-    if (!name.trim() || links.length === 0) {
-      setCreatePersonaError("Add a name and at least one source link.");
+    if (!name.trim() || (links.length === 0 && documents.length === 0)) {
+      setCreatePersonaError("Add a name and at least one source link or document.");
       return;
     }
 
@@ -463,6 +699,7 @@ export function Chat() {
           avatarUrl,
           voicePrompt,
           links,
+          documents,
         }),
       });
       const data = await res.json();
@@ -482,16 +719,91 @@ export function Chat() {
     }
   };
 
+  const handleUpdatePersona = async ({
+    name,
+    description,
+    avatarUrl,
+    voicePrompt,
+    linksText,
+    documents,
+  }: {
+    name: string;
+    description: string;
+    avatarUrl: string;
+    voicePrompt: string;
+    linksText: string;
+    documents: SourceDocumentDraft[];
+  }) => {
+    setCreatePersonaError(null);
+    if (selectedPersona.id === "paul-graham") return;
+
+    const links = linksText
+      .split(/\r?\n/)
+      .map((link) => link.trim())
+      .filter(Boolean);
+
+    setIsCreatingPersona(true);
+    try {
+      const res = await fetch(`/api/personas/${selectedPersona.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, description, avatarUrl, voicePrompt, links, documents }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to update persona.");
+      }
+
+      await loadPersonas();
+      setSelectedPersonaId(data.persona.id);
+      setMessages([]);
+      setInput("");
+      setIsAddPersonaOpen(false);
+    } catch (error) {
+      setCreatePersonaError(error instanceof Error ? error.message : "Failed to update persona.");
+    } finally {
+      setIsCreatingPersona(false);
+    }
+  };
+
+  const handleDeletePersona = async () => {
+    setCreatePersonaError(null);
+    if (selectedPersona.id === "paul-graham") return;
+    if (!window.confirm(`Delete ${selectedPersona.name}? This removes its local documents and index.`)) return;
+
+    setIsCreatingPersona(true);
+    try {
+      const res = await fetch(`/api/personas/${selectedPersona.id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to delete persona.");
+      }
+
+      await loadPersonas();
+      setSelectedPersonaId("paul-graham");
+      setMessages([]);
+      setInput("");
+      setIsAddPersonaOpen(false);
+    } catch (error) {
+      setCreatePersonaError(error instanceof Error ? error.message : "Failed to delete persona.");
+    } finally {
+      setIsCreatingPersona(false);
+    }
+  };
+
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden">
       <AddPersonaPanel
         isOpen={isAddPersonaOpen}
+        mode={personaPanelMode}
+        persona={personaPanelMode === "edit" ? selectedPersona : undefined}
         isCreating={isCreatingPersona}
         error={createPersonaError}
         onClose={() => {
           if (!isCreatingPersona) setIsAddPersonaOpen(false);
         }}
-        onSubmit={handleCreatePersona}
+        onSubmit={personaPanelMode === "edit" ? handleUpdatePersona : handleCreatePersona}
+        onDelete={personaPanelMode === "edit" ? handleDeletePersona : undefined}
       />
       <div className="absolute top-3 left-3 md:top-4 md:left-4 z-10 flex gap-2 animate-fade-in safe-area-top">
         <Button
@@ -502,27 +814,8 @@ export function Chat() {
         >
           <PlusIcon className="h-4 w-4" />
         </Button>
-        <Select value={selectedPersona.id} onValueChange={handlePersonaChange}>
-          <SelectTrigger
-            aria-label="Select persona"
-            size="sm"
-            className="h-10 md:h-9 max-w-[180px] shadow-border-small hover:shadow-border-medium bg-background/80 backdrop-blur-sm border-0 hover:bg-background"
-          >
-            <SelectValue placeholder="Persona" />
-          </SelectTrigger>
-          <SelectContent>
-            {personas.map((persona) => (
-              <SelectItem key={persona.id} value={persona.id}>
-                {persona.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
         <Button
-          onClick={() => {
-            setCreatePersonaError(null);
-            setIsAddPersonaOpen(true);
-          }}
+          onClick={openCreatePersona}
           variant="outline"
           size="icon"
           className="h-10 w-10 md:h-9 md:w-9 shadow-border-small hover:shadow-border-medium bg-background/80 backdrop-blur-sm border-0 hover:bg-background active:scale-95 md:hover:scale-[1.02] transition-all duration-150 ease"
@@ -551,12 +844,15 @@ export function Chat() {
         <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 animate-fade-in safe-area-inset">
           <div className="w-full max-w-2xl text-center space-y-6 md:space-y-12">
             <div className="space-y-3 md:space-y-4">
+              <p className="animate-slide-up text-xs font-medium uppercase tracking-[0.24em] text-muted-foreground">
+                Persona Generator
+              </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 animate-slide-up">
                 <PersonaAvatar
                   persona={selectedPersona}
                   className="shadow-lg w-14 h-14 md:w-16 md:h-16 text-xl"
                 />
-                <h1 className="text-2xl sm:text-3xl md:text-5xl font-light tracking-tight text-foreground">
+                <h1 className="text-3xl sm:text-4xl md:text-6xl font-light tracking-tight text-foreground">
                   <span className="font-serif font-semibold tracking-tight">
                     {selectedPersona.name} Agent
                   </span>
@@ -572,10 +868,7 @@ export function Chat() {
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => {
-                  setCreatePersonaError(null);
-                  setIsAddPersonaOpen(true);
-                }}
+                onClick={openCreatePersona}
                 className="animate-slide-up"
                 style={{ animationDelay: '75ms' }}
               >
@@ -585,11 +878,11 @@ export function Chat() {
             </div>
             <div className="w-full animate-slide-up" style={{ animationDelay: '100ms' }}>
               <form onSubmit={handleSubmit}>
-                <div className="relative rounded-2xl bg-muted/50 dark:bg-muted/30 border border-border/50 shadow-sm hover:shadow-md focus-within:shadow-md focus-within:border-border transition-all duration-200">
+                <div className="relative rounded-2xl bg-background border border-border shadow-sm hover:shadow-md focus-within:shadow-md focus-within:border-foreground/30 transition-all duration-200">
                   <textarea
                     ref={textareaRef}
                     name="prompt"
-                    placeholder={`Ask ${selectedPersona.name}...`}
+                    placeholder="Ask a persona..."
                     onChange={(e) => setInput(e.target.value)}
                     value={input}
                     autoFocus
@@ -603,14 +896,21 @@ export function Chat() {
                     }}
                   />
                   <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
-                    <ModelSelector selectedModel={selectedModel} onModelChange={setSelectedModel} />
+                    <ComposerControls
+                      personas={personas}
+                      selectedPersona={selectedPersona}
+                      selectedModel={selectedModel}
+                      onPersonaChange={handlePersonaChange}
+                      onEditPersona={openEditPersona}
+                      onModelChange={setSelectedModel}
+                    />
                     <Button
                       type="submit"
                       size="icon"
                       className={cn(
                         "h-8 w-8 rounded-lg transition-all duration-200",
                         input.trim()
-                          ? "bg-[#0A4EAA] text-white hover:bg-[#0A4EAA]/90 shadow-sm"
+                          ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
                           : "bg-muted text-muted-foreground cursor-not-allowed"
                       )}
                       disabled={!input.trim()}
@@ -622,7 +922,7 @@ export function Chat() {
               </form>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 text-xs md:text-sm animate-slide-up" style={{ animationDelay: '150ms' }}>
-              {selectedPersona.examplePrompts.slice(0, 4).map((prompt) => (
+              {neutralPrompts.map((prompt) => (
                 <button
                   key={prompt}
                   onClick={() => {
@@ -648,7 +948,7 @@ export function Chat() {
                   className={cn(
                     "group",
                     m.role === "user" &&
-                      "bg-[#0A4EAA] text-white rounded-2xl p-3 md:p-4 ml-auto max-w-[90%] md:max-w-[75%] shadow-border-small font-medium text-sm md:text-base",
+                      "bg-primary text-primary-foreground rounded-2xl p-3 md:p-4 ml-auto max-w-[90%] md:max-w-[75%] shadow-border-small font-medium text-sm md:text-base",
                     m.role === "assistant" && "max-w-[95%] md:max-w-[85%] text-foreground/90 leading-relaxed text-sm md:text-base"
                   )}
                 >
@@ -721,11 +1021,11 @@ export function Chat() {
       {hasMessages && (
         <div className="w-full max-w-4xl mx-auto px-4 md:px-8 pb-4 md:pb-6 pt-2">
           <form onSubmit={handleSubmit}>
-            <div className="relative rounded-2xl bg-muted/50 dark:bg-muted/30 border border-border/50 shadow-sm hover:shadow-md focus-within:shadow-md focus-within:border-border transition-all duration-200">
+            <div className="relative rounded-2xl bg-background border border-border shadow-sm hover:shadow-md focus-within:shadow-md focus-within:border-foreground/30 transition-all duration-200">
               <textarea
                 ref={textareaRef}
                 name="prompt"
-                placeholder={`Ask ${selectedPersona.name} a follow-up...`}
+                placeholder="Ask a follow-up..."
                 onChange={(e) => setInput(e.target.value)}
                 value={input}
                 rows={1}
@@ -738,14 +1038,21 @@ export function Chat() {
                 }}
               />
               <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
-                <ModelSelector selectedModel={selectedModel} onModelChange={setSelectedModel} />
+                <ComposerControls
+                  personas={personas}
+                  selectedPersona={selectedPersona}
+                  selectedModel={selectedModel}
+                  onPersonaChange={handlePersonaChange}
+                  onEditPersona={openEditPersona}
+                  onModelChange={setSelectedModel}
+                />
                 <Button
                   type="submit"
                   size="icon"
                   className={cn(
                     "h-8 w-8 rounded-lg transition-all duration-200",
                     input.trim()
-                      ? "bg-[#0A4EAA] text-white hover:bg-[#0A4EAA]/90 shadow-sm"
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
                       : "bg-muted text-muted-foreground cursor-not-allowed"
                   )}
                   disabled={!input.trim()}
@@ -766,7 +1073,7 @@ export function Chat() {
               href="https://github.com/Habibi-7"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 transition-colors hover:text-[#0A4EAA]"
+              className="underline underline-offset-4 transition-colors hover:text-foreground"
             >
               Habib
             </a>

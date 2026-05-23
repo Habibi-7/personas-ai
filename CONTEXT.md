@@ -72,3 +72,10 @@ as its own adapter.
 Not part of the Corpus. Defuddle CLI turns user-provided URLs into clean
 markdown. Lives behind `lib/source-extractor.ts` so other extractors can be
 added later without changing persona/index code.
+
+## Source ingestion
+
+The shared path for adding evidence to a persona. Lives in
+`lib/persona-sources.ts`. It accepts URL links and local document content,
+writes markdown source documents, rebuilds that persona's index, and clears the
+in-memory corpus cache.
