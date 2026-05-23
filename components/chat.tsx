@@ -30,7 +30,6 @@ import type { UIMessage } from "@ai-sdk/react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Streamdown } from "streamdown";
 import {
   Select,
   SelectContent,
@@ -956,9 +955,9 @@ export function Chat() {
                     switch (part.type) {
                       case "text":
                         return m.role === "assistant" ? (
-                          <Streamdown key={`${m.id}-${i}`} isAnimating={status === "streaming" && m.id === messages[messages.length - 1]?.id}>
+                          <div key={`${m.id}-${i}`} className="readable-text whitespace-pre-wrap break-words">
                             {part.text}
-                          </Streamdown>
+                          </div>
                         ) : (
                           <div key={`${m.id}-${i}`}>{part.text}</div>
                         );

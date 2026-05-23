@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { personaWritesDisabledResponse, personaWritesEnabled } from "@/lib/deployment";
 import { hasSourceInput, ingestPersonaSources, type SourceDocumentInput } from "@/lib/persona-sources";
 import { DEFAULT_PERSONA_ID, deletePersona, getPersona, updatePersona } from "@/lib/personas";
 import { clearPersonaCorpus } from "@/lib/persona-corpus";
@@ -25,6 +26,8 @@ export async function GET(_req: Request, context: PersonaRouteContext) {
 }
 
 export async function PATCH(req: Request, context: PersonaRouteContext) {
+  if (!personaWritesEnabled()) return personaWritesDisabledResponse();
+
   try {
     const { personaId } = await context.params;
     if (personaId === DEFAULT_PERSONA_ID) {
@@ -58,6 +61,8 @@ export async function PATCH(req: Request, context: PersonaRouteContext) {
 }
 
 export async function DELETE(_req: Request, context: PersonaRouteContext) {
+  if (!personaWritesEnabled()) return personaWritesDisabledResponse();
+
   try {
     const { personaId } = await context.params;
     if (personaId === DEFAULT_PERSONA_ID) {

@@ -4,65 +4,49 @@ Local-first AI personas grounded in source documents you provide. The repo ships
 
 Stack:
 
-| Capability       | Implementation                                            |
-| ---------------- | --------------------------------------------------------- |
+
+| Capability       | Implementation                                                               |
+| ---------------- | ---------------------------------------------------------------------------- |
 | Source corpus    | Local markdown files under `data/essays/` or `data/personas/<id>/documents/` |
-| Semantic search  | `@xenova/transformers` MiniLM-L6-v2, cosine over JSON     |
-| URL extraction   | Defuddle CLI → clean markdown                             |
-| Browse / read    | `node:fs` over the active persona documents               |
-| Regex search     | `ripgrep` subprocess                                      |
-| Web search       | Tavily HTTP API (optional)                                |
-| Chat UI / models | Next.js 15 + AI SDK + Vercel AI Gateway                   |
+| Semantic search  | `@xenova/transformers` MiniLM-L6-v2, cosine over JSON                        |
+| URL extraction   | Defuddle CLI → clean markdown                                                |
+| Browse / read    | `node:fs` over the active persona documents                                  |
+| Regex search     | `ripgrep` subprocess                                                         |
+| Web search       | Tavily HTTP API (optional)                                                   |
+| Chat UI / models | Next.js 15 + AI SDK + Vercel AI Gateway                                      |
 
-## Setup
 
-Requires `bun`, `node`, and `ripgrep` (`brew install ripgrep`).
+## Local Setup
+
+You need `bun`, `node`, and `ripgrep`.
 
 ```bash
 bun install
-cp .env.example .env   # fill in AI_GATEWAY_API_KEY, optionally TAVILY_API_KEY
-```
-
-The repo ships with Paul Graham's `data/essays/` and `data/index/` already populated. To rebuild:
-
-```bash
-bun run scrape   # re-scrape paulgraham.com (resumable, skips existing)
-bun run index    # rebuild embeddings (~2 min, MiniLM downloads once)
-# or both:
-bun run ingest
-```
-
-To rebuild a user-created persona after editing its markdown:
-
-```bash
-bun run index naval-ravikant
-```
-
-Run dev server:
-
-```bash
+cp .env.example .env
 bun run dev
 ```
 
-## How it works
+Add your own keys to `.env`:
 
-- `lib/personas.ts` owns persona metadata and local paths.
-- `app/api/personas/route.ts` creates personas from pasted URLs: Defuddle extracts markdown, files are saved locally, then embeddings are built.
-- `lib/local-tools.ts` exports the tool surface the chat route consumes (`searchEssays`, `browseEssays`, `listDirectory`, `readEssay`, `grepEssays`, `webSearch`) backed by the selected persona's local files.
-- `data/index/embeddings.json` holds chunk vectors (2k+ chunks across 220+ essays). Loaded once into memory on first tool call.
-- MiniLM model (~25MB) is fetched from HuggingFace on first run and cached.
+- `AI_GATEWAY_API_KEY` is required for chat.
+- `TAVILY_API_KEY` is optional for web search.
 
-## Adding Personas
+## Default Persona
 
-Click **Add Persona**, enter a name, and paste source URLs or upload/paste local documents. The app will:
+Paul Graham is included by default so the app works immediately after setup.
+His essays are already scraped and indexed.
 
-1. Create `data/personas/<persona-id>/persona.json`.
-2. Run Defuddle for each URL and save markdown into `documents/`.
-3. Save uploaded/pasted documents into the same `documents/` folder.
-4. Build `index/embeddings.json` and `index/manifest.json`.
-5. Add the persona to the selector.
+## Adding Your Own Personas
 
-Generated persona data is local to your clone. You can edit/delete personas from the UI, add more URL or document sources later, or edit the markdown files directly and rerun `bun run index <persona-id>`.
+Click **Add Persona**, enter a name, and add sources. Sources can be URLs,
+uploaded files, or pasted text.
+
+When you add a persona, the app turns sources into clean markdown, breaks them
+into searchable chunks, builds local embeddings, and then lets the chat answer
+from those sources.
+
+Everything you create stays in your local clone. You can edit or delete personas
+from the UI.
 
 ## Credits
 
@@ -70,4 +54,4 @@ Inspired by [Nozomio Labs](https://github.com/nozomio-labs), which prototyped th
 
 ## License
 
-Code under MIT (see LICENSE). Essay text remains property of Paul Graham.
+MIT

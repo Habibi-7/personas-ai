@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { personaWritesDisabledResponse, personaWritesEnabled } from "@/lib/deployment";
 import { hasSourceInput, ingestPersonaSources, type SourceDocumentInput } from "@/lib/persona-sources";
 import { createPersona, listPersonas } from "@/lib/personas";
 
@@ -19,6 +20,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  if (!personaWritesEnabled()) return personaWritesDisabledResponse();
+
   try {
     const input = (await req.json()) as CreatePersonaRequest;
     const name = input.name?.trim();

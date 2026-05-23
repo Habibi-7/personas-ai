@@ -50,6 +50,17 @@ ${voicePrompt}`;
 }
 
 export async function POST(req: Request) {
+  if (!process.env.AI_GATEWAY_API_KEY) {
+    return new Response(
+      [
+        "AI_GATEWAY_API_KEY is not configured for this deployment.",
+        "",
+        "To use Persona Generator, clone the repository, copy .env.example to .env, add your own AI Gateway key, and run it locally.",
+      ].join("\n"),
+      { status: 401 }
+    );
+  }
+
   const { messages, model, personaId }: { messages: UIMessage[]; model?: string; personaId?: string } = await req.json();
 
   const selectedModel = model || DEFAULT_MODEL;
@@ -68,7 +79,7 @@ export async function POST(req: Request) {
       voicePrompt: persona.voicePrompt,
       toolCatalog,
     }),
-    messages: convertToModelMessages(messages),
+    messages: await convertToModelMessages(messages),
     tools,
     stopWhen: stepCountIs(10),
     onError: (e) => {
