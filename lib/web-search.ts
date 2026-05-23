@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export const webSearch = tool({
   description:
-    "Web search via Tavily for information not in Paul Graham's essays (recent events, external context). Use sparingly.",
+    "Web search via Tavily for information not in the local persona corpus (recent events, external context). Use sparingly.",
   inputSchema: z.object({
     query: z.string(),
     numResults: z.number().min(1).max(10).default(5),

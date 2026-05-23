@@ -3,16 +3,29 @@
 Canonical vocabulary for this codebase. Use these terms exactly in code, docs,
 and conversations — drift dilutes meaning.
 
+## Persona
+
+A local assistant profile backed by a corpus of markdown source documents.
+Metadata lives in `persona.json`; generated personas live under
+`data/personas/<persona-id>/`.
+
+Paul Graham is the bundled default persona and still uses the legacy
+`data/essays/` and `data/index/` paths to avoid moving the shipped corpus.
+
+## Source Document
+
+A single markdown document used as persona evidence. Stored with YAML
+frontmatter (`title`, `slug`, `url`). For generated personas the path is
+`data/personas/<persona-id>/documents/<slug>.md`.
+
 ## Essay
 
-A single Paul Graham essay scraped from paulgraham.com. Stored as a markdown
-file in `data/essays/<slug>.md` with YAML frontmatter (`title`, `slug`, `url`).
-The slug is the canonical identifier (matches the source URL path).
+A Source Document from Paul Graham's bundled corpus.
 
 ## Chunk
 
-A ~220-word slice of an Essay's body, with 40-word overlap to neighbours. The
-unit of semantic retrieval. Identified by `(slug, chunkIdx)`.
+A ~220-word slice of a Source Document's body, with 40-word overlap to
+neighbours. The unit of semantic retrieval. Identified by `(slug, chunkIdx)`.
 
 ## Embedder
 
@@ -22,14 +35,16 @@ ONNX. The `Embedder` interface is the seam — callers don't know which model.
 
 ## Index
 
-Two on-disk artefacts under `data/index/`:
+Two on-disk artefacts under a persona's `index/` directory:
 
 - `embeddings.json` — array of `{slug, title, url, chunkIdx, text, vec}`. Used
   for semantic search. ~15–20K entries.
 - `manifest.json` — array of `{slug, title, url, chunks, file}`. Used for
   browse/list operations without paying the embeddings load cost.
 
-Both rebuilt by `bun run index` (`scripts/build-index.ts`).
+Paul Graham's default index lives in `data/index/`. Generated persona indexes
+live in `data/personas/<persona-id>/index/`. Rebuild with `bun run index` or
+`bun run index <persona-id>` (`scripts/build-index.ts`).
 
 ## Manifest
 
@@ -38,10 +53,11 @@ Lighter than the full embeddings index; loaded for browse/list/read paths.
 
 ## Corpus
 
-The single module owning all queries against the Essay corpus: semantic search,
-metadata browse, slug-prefix list, full-text grep, and individual essay read.
+The single module owning all queries against a persona corpus: semantic search,
+metadata browse, slug-prefix list, full-text grep, and individual source read.
 Lives in `lib/corpus.ts`. Built by `createCorpus({ embedder, essaysDir,
-indexDir })`. Lazy init — first call triggers index load and embedder warmup.
+indexDir })`; `essaysDir` may point at generic source documents. Lazy init —
+first call triggers index load and embedder warmup.
 
 The Corpus is the **test surface**. Tool definitions in `lib/local-tools.ts`
 are thin Zod adapters over Corpus methods.
@@ -50,3 +66,9 @@ are thin Zod adapters over Corpus methods.
 
 Not part of the Corpus. External Tavily HTTP API. Lives in `lib/web-search.ts`
 as its own adapter.
+
+## Source extraction
+
+Not part of the Corpus. Defuddle CLI turns user-provided URLs into clean
+markdown. Lives behind `lib/source-extractor.ts` so other extractors can be
+added later without changing persona/index code.

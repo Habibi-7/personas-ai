@@ -4,7 +4,22 @@ import { useChat } from "@ai-sdk/react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ModelSelector } from "@/components/model-selector";
-import { ArrowUpIcon, PlusIcon, SearchIcon, BookOpenIcon, FileTextIcon, GlobeIcon, CopyIcon, CheckIcon, ThumbsUpIcon, ThumbsDownIcon, GithubIcon } from "lucide-react";
+import {
+  ArrowUpIcon,
+  PlusIcon,
+  SearchIcon,
+  BookOpenIcon,
+  FileTextIcon,
+  GlobeIcon,
+  CopyIcon,
+  CheckIcon,
+  ThumbsUpIcon,
+  ThumbsDownIcon,
+  GithubIcon,
+  UserPlusIcon,
+  Loader2Icon,
+  XIcon,
+} from "lucide-react";
 import { DEFAULT_MODEL, type SupportedModel } from "@/lib/constants";
 import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -13,6 +28,40 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Streamdown } from "streamdown";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+type PersonaSummary = {
+  id: string;
+  name: string;
+  description: string;
+  avatarUrl?: string;
+  documentLabel: string;
+  examplePrompts: string[];
+  documentCount: number;
+  indexed: boolean;
+};
+
+const fallbackPersona: PersonaSummary = {
+  id: "paul-graham",
+  name: "Paul Graham",
+  description: "Grounded in 220+ Paul Graham essays.",
+  avatarUrl: "/pg.png",
+  documentLabel: "essays",
+  examplePrompts: [
+    "What is Collison installation?",
+    "Why did hackers avoid building Stripe?",
+    "When to bootstrap vs take funding?",
+    "How to calculate default alive?",
+  ],
+  documentCount: 0,
+  indexed: true,
+};
 
 const toolIcons: Record<string, React.ReactNode> = {
   multiSearchEssays: <SearchIcon className="h-3 w-3" />,
@@ -25,11 +74,11 @@ const toolIcons: Record<string, React.ReactNode> = {
 };
 
 const toolDisplayNames: Record<string, string> = {
-  multiSearchEssays: "Searching essays (multi-query)",
-  searchEssays: "Searching essays",
-  browseEssays: "Browsing essays",
+  multiSearchEssays: "Searching sources (multi-query)",
+  searchEssays: "Searching sources",
+  browseEssays: "Browsing sources",
   listDirectory: "Listing directory",
-  readEssay: "Reading essay",
+  readEssay: "Reading source",
   grepEssays: "Pattern search",
   webSearch: "Web search",
 };
@@ -135,14 +184,181 @@ function MessageActions({ message, feedback, onFeedback }: {
   );
 }
 
+function PersonaAvatar({ persona, className }: { persona: PersonaSummary; className?: string }) {
+  if (persona.avatarUrl?.startsWith("/")) {
+    return (
+      <Image
+        src={persona.avatarUrl}
+        alt={persona.name}
+        width={128}
+        height={128}
+        className={cn("rounded-full object-cover", className)}
+        priority
+        quality={100}
+      />
+    );
+  }
+
+  if (persona.avatarUrl) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={persona.avatarUrl}
+        alt={persona.name}
+        className={cn("rounded-full object-cover", className)}
+      />
+    );
+  }
+
+  return (
+    <div className={cn("rounded-full bg-muted flex items-center justify-center font-serif font-semibold", className)}>
+      {persona.name
+        .split(/\s+/)
+        .map((part) => part[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()}
+    </div>
+  );
+}
+
+function AddPersonaPanel({
+  isOpen,
+  isCreating,
+  error,
+  onClose,
+  onSubmit,
+}: {
+  isOpen: boolean;
+  isCreating: boolean;
+  error: string | null;
+  onClose: () => void;
+  onSubmit: (input: {
+    name: string;
+    description: string;
+    avatarUrl: string;
+    voicePrompt: string;
+    linksText: string;
+  }) => Promise<void>;
+}) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [voicePrompt, setVoicePrompt] = useState("");
+  const [linksText, setLinksText] = useState("");
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <form
+        onSubmit={async (event) => {
+          event.preventDefault();
+          await onSubmit({ name, description, avatarUrl, voicePrompt, linksText });
+        }}
+        className="w-full max-w-2xl rounded-2xl bg-background border border-border shadow-xl p-5 md:p-6 space-y-4"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-semibold">Add Persona</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Paste source links. Defuddle turns them into local markdown, then the app builds embeddings.
+            </p>
+          </div>
+          <Button type="button" variant="ghost" size="icon" onClick={onClose} disabled={isCreating}>
+            <XIcon className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <label className="block space-y-1.5">
+          <span className="text-sm font-medium">Name</span>
+          <input
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            placeholder="Naval Ravikant"
+            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            required
+          />
+        </label>
+
+        <label className="block space-y-1.5">
+          <span className="text-sm font-medium">Description</span>
+          <input
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            placeholder="Investor, founder, writer, and podcaster"
+            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          />
+        </label>
+
+        <label className="block space-y-1.5">
+          <span className="text-sm font-medium">Avatar URL</span>
+          <input
+            value={avatarUrl}
+            onChange={(event) => setAvatarUrl(event.target.value)}
+            placeholder="Optional"
+            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          />
+        </label>
+
+        <label className="block space-y-1.5">
+          <span className="text-sm font-medium">Source links</span>
+          <textarea
+            value={linksText}
+            onChange={(event) => setLinksText(event.target.value)}
+            placeholder={"https://nav.al/rich\nhttps://nav.al/specific-knowledge"}
+            rows={5}
+            className="w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            required
+          />
+        </label>
+
+        <label className="block space-y-1.5">
+          <span className="text-sm font-medium">Voice prompt</span>
+          <textarea
+            value={voicePrompt}
+            onChange={(event) => setVoicePrompt(event.target.value)}
+            placeholder="Optional. Leave blank to generate a simple grounded persona prompt."
+            rows={3}
+            className="w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          />
+        </label>
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        <div className="flex justify-end gap-2">
+          <Button type="button" variant="outline" onClick={onClose} disabled={isCreating}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={isCreating}>
+            {isCreating && <Loader2Icon className="h-4 w-4 animate-spin" />}
+            {isCreating ? "Building..." : "Build Persona"}
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 export function Chat() {
   const [input, setInput] = useState("");
   const [selectedModel, setSelectedModel] = useState<SupportedModel>(DEFAULT_MODEL);
   const [feedbacks, setFeedbacks] = useState<Record<string, "like" | "dislike" | null>>({});
+  const [personas, setPersonas] = useState<PersonaSummary[]>([fallbackPersona]);
+  const [selectedPersonaId, setSelectedPersonaId] = useState(fallbackPersona.id);
+  const [isAddPersonaOpen, setIsAddPersonaOpen] = useState(false);
+  const [isCreatingPersona, setIsCreatingPersona] = useState(false);
+  const [createPersonaError, setCreatePersonaError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const { messages, error, sendMessage, regenerate, setMessages, stop, status } = useChat();
+  const selectedPersona = personas.find((persona) => persona.id === selectedPersonaId) ?? personas[0] ?? fallbackPersona;
 
   const handleFeedback = (messageId: string, type: "like" | "dislike") => {
     setFeedbacks((prev) => ({
@@ -157,6 +373,22 @@ export function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const loadPersonas = useCallback(async () => {
+    const res = await fetch("/api/personas");
+    if (!res.ok) return;
+    const data = await res.json() as { personas: PersonaSummary[] };
+    if (data.personas?.length) {
+      setPersonas(data.personas);
+      setSelectedPersonaId((current) =>
+        data.personas.some((persona) => persona.id === current) ? current : data.personas[0].id
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadPersonas();
+  }, [loadPersonas]);
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -165,6 +397,13 @@ export function Chat() {
     stop();
     setMessages([]);
     setInput("");
+  };
+
+  const handlePersonaChange = (personaId: string) => {
+    stop();
+    setMessages([]);
+    setInput("");
+    setSelectedPersonaId(personaId);
   };
 
   const adjustTextareaHeight = useCallback(() => {
@@ -182,15 +421,78 @@ export function Chat() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
-    sendMessage({ text: input }, { body: { model: selectedModel } });
+    sendMessage({ text: input }, { body: { model: selectedModel, personaId: selectedPersona.id } });
     setInput("");
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
   };
 
+  const handleCreatePersona = async ({
+    name,
+    description,
+    avatarUrl,
+    voicePrompt,
+    linksText,
+  }: {
+    name: string;
+    description: string;
+    avatarUrl: string;
+    voicePrompt: string;
+    linksText: string;
+  }) => {
+    setCreatePersonaError(null);
+    const links = linksText
+      .split(/\r?\n/)
+      .map((link) => link.trim())
+      .filter(Boolean);
+
+    if (!name.trim() || links.length === 0) {
+      setCreatePersonaError("Add a name and at least one source link.");
+      return;
+    }
+
+    setIsCreatingPersona(true);
+    try {
+      const res = await fetch("/api/personas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          description,
+          avatarUrl,
+          voicePrompt,
+          links,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to create persona.");
+      }
+
+      await loadPersonas();
+      setSelectedPersonaId(data.persona.id);
+      setMessages([]);
+      setInput("");
+      setIsAddPersonaOpen(false);
+    } catch (error) {
+      setCreatePersonaError(error instanceof Error ? error.message : "Failed to create persona.");
+    } finally {
+      setIsCreatingPersona(false);
+    }
+  };
+
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden">
+      <AddPersonaPanel
+        isOpen={isAddPersonaOpen}
+        isCreating={isCreatingPersona}
+        error={createPersonaError}
+        onClose={() => {
+          if (!isCreatingPersona) setIsAddPersonaOpen(false);
+        }}
+        onSubmit={handleCreatePersona}
+      />
       <div className="absolute top-3 left-3 md:top-4 md:left-4 z-10 flex gap-2 animate-fade-in safe-area-top">
         <Button
           onClick={handleNewChat}
@@ -199,6 +501,34 @@ export function Chat() {
           className="h-10 w-10 md:h-9 md:w-9 shadow-border-small hover:shadow-border-medium bg-background/80 backdrop-blur-sm border-0 hover:bg-background active:scale-95 md:hover:scale-[1.02] transition-all duration-150 ease"
         >
           <PlusIcon className="h-4 w-4" />
+        </Button>
+        <Select value={selectedPersona.id} onValueChange={handlePersonaChange}>
+          <SelectTrigger
+            aria-label="Select persona"
+            size="sm"
+            className="h-10 md:h-9 max-w-[180px] shadow-border-small hover:shadow-border-medium bg-background/80 backdrop-blur-sm border-0 hover:bg-background"
+          >
+            <SelectValue placeholder="Persona" />
+          </SelectTrigger>
+          <SelectContent>
+            {personas.map((persona) => (
+              <SelectItem key={persona.id} value={persona.id}>
+                {persona.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button
+          onClick={() => {
+            setCreatePersonaError(null);
+            setIsAddPersonaOpen(true);
+          }}
+          variant="outline"
+          size="icon"
+          className="h-10 w-10 md:h-9 md:w-9 shadow-border-small hover:shadow-border-medium bg-background/80 backdrop-blur-sm border-0 hover:bg-background active:scale-95 md:hover:scale-[1.02] transition-all duration-150 ease"
+          aria-label="Add persona"
+        >
+          <UserPlusIcon className="h-4 w-4" />
         </Button>
         <Button
           asChild
@@ -222,24 +552,36 @@ export function Chat() {
           <div className="w-full max-w-2xl text-center space-y-6 md:space-y-12">
             <div className="space-y-3 md:space-y-4">
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 animate-slide-up">
-                <Image
-                  src="/pg.png"
-                  alt="Paul Graham"
-                  width={128}
-                  height={128}
-                  className="rounded-full shadow-lg w-14 h-14 md:w-16 md:h-16 object-cover"
-                  priority
-                  quality={100}
+                <PersonaAvatar
+                  persona={selectedPersona}
+                  className="shadow-lg w-14 h-14 md:w-16 md:h-16 text-xl"
                 />
                 <h1 className="text-2xl sm:text-3xl md:text-5xl font-light tracking-tight text-foreground">
                   <span className="font-serif font-semibold tracking-tight">
-                    Paul Graham Agent
+                    {selectedPersona.name} Agent
                   </span>
                 </h1>
               </div>
               <p className="text-muted-foreground text-sm md:text-base animate-slide-up px-2" style={{ animationDelay: '50ms' }}>
-                Ask questions about startups, writing, technology, and life — grounded in 220+ essays.
+                {selectedPersona.description}
+                {selectedPersona.documentCount > 0 && (
+                  <span> Grounded in {selectedPersona.documentCount} local {selectedPersona.documentLabel}.</span>
+                )}
               </p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setCreatePersonaError(null);
+                  setIsAddPersonaOpen(true);
+                }}
+                className="animate-slide-up"
+                style={{ animationDelay: '75ms' }}
+              >
+                <UserPlusIcon className="h-4 w-4" />
+                Add Persona
+              </Button>
             </div>
             <div className="w-full animate-slide-up" style={{ animationDelay: '100ms' }}>
               <form onSubmit={handleSubmit}>
@@ -247,7 +589,7 @@ export function Chat() {
                   <textarea
                     ref={textareaRef}
                     name="prompt"
-                    placeholder="What makes a good startup idea?"
+                    placeholder={`Ask ${selectedPersona.name}...`}
                     onChange={(e) => setInput(e.target.value)}
                     value={input}
                     autoFocus
@@ -280,38 +622,17 @@ export function Chat() {
               </form>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 text-xs md:text-sm animate-slide-up" style={{ animationDelay: '150ms' }}>
-              <button
-                onClick={() => {
-                  setInput("What is Collison installation?");
-                }}
-                className="p-3 rounded-xl text-left text-muted-foreground hover:text-foreground active:bg-muted/70 hover:bg-muted/50 transition-colors"
-              >
-                &ldquo;What is Collison installation?&rdquo;
-              </button>
-              <button
-                onClick={() => {
-                  setInput("In the essay about schlep blindness, what example does PG give about Stripe and why most hackers avoided building it?");
-                }}
-                className="p-3 rounded-xl text-left text-muted-foreground hover:text-foreground active:bg-muted/70 hover:bg-muted/50 transition-colors"
-              >
-                &ldquo;Why did hackers avoid building Stripe?&rdquo;
-              </button>
-              <button
-                onClick={() => {
-                  setInput("What exactly does PG mean by ramen profitable and what specific advice does he give about when to take outside funding vs bootstrap?");
-                }}
-                className="p-3 rounded-xl text-left text-muted-foreground hover:text-foreground active:bg-muted/70 hover:bg-muted/50 transition-colors"
-              >
-                &ldquo;When to bootstrap vs take funding?&rdquo;
-              </button>
-              <button
-                onClick={() => {
-                  setInput("In the default alive or default dead essay, what is the exact calculation PG describes to determine which category your startup falls into?");
-                }}
-                className="p-3 rounded-xl text-left text-muted-foreground hover:text-foreground active:bg-muted/70 hover:bg-muted/50 transition-colors"
-              >
-                &ldquo;How to calculate default alive?&rdquo;
-              </button>
+              {selectedPersona.examplePrompts.slice(0, 4).map((prompt) => (
+                <button
+                  key={prompt}
+                  onClick={() => {
+                    setInput(prompt);
+                  }}
+                  className="p-3 rounded-xl text-left text-muted-foreground hover:text-foreground active:bg-muted/70 hover:bg-muted/50 transition-colors"
+                >
+                  &ldquo;{prompt}&rdquo;
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -404,7 +725,7 @@ export function Chat() {
               <textarea
                 ref={textareaRef}
                 name="prompt"
-                placeholder="Ask a follow-up question..."
+                placeholder={`Ask ${selectedPersona.name} a follow-up...`}
                 onChange={(e) => setInput(e.target.value)}
                 value={input}
                 rows={1}
