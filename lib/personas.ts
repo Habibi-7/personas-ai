@@ -17,10 +17,9 @@ export type Persona = {
 export type PersonaWithStats = Persona & {
   documentCount: number;
   indexed: boolean;
+  hasRecipe: boolean;
+  recipeStatus: "ready" | "needs-bootstrap" | "missing" | "n/a";
 };
-
-const DATA_DIR = join(process.cwd(), "data");
-export const PERSONAS_DIR = join(DATA_DIR, "personas");
 
 export const DEFAULT_PERSONA_ID = "paul-graham";
 
@@ -40,33 +39,45 @@ export const DEFAULT_PERSONA: Persona = {
     "Direct and concise, like Paul Graham. Short sentences. Concrete examples. Avoid corporate speak, jargon, and hedging. Challenge conventional wisdom when the essays do. Use first-principles reasoning. Occasionally start a sentence with \"Um...\" — a PG verbal tic. Conversational, as if explaining to a smart friend.",
 };
 
+export function dataRootDir() {
+  return join(process.cwd(), "data");
+}
+
+export function personasRootDir() {
+  return join(dataRootDir(), "personas");
+}
+
 export function personaPaths(personaId: string) {
+  const dataDir = dataRootDir();
   if (personaId === DEFAULT_PERSONA_ID) {
     return {
-      rootDir: DATA_DIR,
-      documentsDir: join(DATA_DIR, "essays"),
-      indexDir: join(DATA_DIR, "index"),
+      rootDir: dataDir,
+      documentsDir: join(dataDir, "essays"),
+      indexDir: join(dataDir, "index"),
       personaFile: "",
+      sourcesFile: "",
     };
   }
 
-  const rootDir = join(PERSONAS_DIR, safePersonaId(personaId));
+  const rootDir = join(personasRootDir(), safePersonaId(personaId));
   return {
     rootDir,
     documentsDir: join(rootDir, "documents"),
     indexDir: join(rootDir, "index"),
     personaFile: join(rootDir, "persona.json"),
+    sourcesFile: join(rootDir, "sources.json"),
   };
 }
 
 export async function listPersonas(): Promise<PersonaWithStats[]> {
   const personas: Persona[] = [DEFAULT_PERSONA];
+  const personasDir = personasRootDir();
 
-  if (existsSync(PERSONAS_DIR)) {
-    const entries = await readdir(PERSONAS_DIR, { withFileTypes: true });
+  if (existsSync(personasDir)) {
+    const entries = await readdir(personasDir, { withFileTypes: true });
     for (const entry of entries) {
       if (!entry.isDirectory()) continue;
-      const personaFile = join(PERSONAS_DIR, entry.name, "persona.json");
+      const personaFile = join(personasDir, entry.name, "persona.json");
       if (!existsSync(personaFile)) continue;
       const persona = JSON.parse(await readFile(personaFile, "utf8")) as Persona;
       if (persona.id !== DEFAULT_PERSONA_ID) personas.push(persona);
@@ -184,13 +195,26 @@ async function uniquePersonaId(base: string): Promise<string> {
 }
 
 async function withStats(persona: Persona): Promise<PersonaWithStats> {
-  const { documentsDir, indexDir } = personaPaths(persona.id);
+  const { documentsDir, indexDir, sourcesFile } = personaPaths(persona.id);
   const docs = existsSync(documentsDir)
     ? (await readdir(documentsDir)).filter((file) => file.endsWith(".md"))
     : [];
+  const indexed =
+    existsSync(join(indexDir, "embeddings.json")) && existsSync(join(indexDir, "manifest.json"));
+  const hasRecipe = Boolean(sourcesFile) && existsSync(sourcesFile);
+
+  let recipeStatus: PersonaWithStats["recipeStatus"] = "n/a";
+  if (persona.id !== DEFAULT_PERSONA_ID) {
+    if (!hasRecipe) recipeStatus = "missing";
+    else if (indexed) recipeStatus = "ready";
+    else recipeStatus = "needs-bootstrap";
+  }
+
   return {
     ...persona,
     documentCount: docs.length,
-    indexed: existsSync(join(indexDir, "embeddings.json")) && existsSync(join(indexDir, "manifest.json")),
+    indexed,
+    hasRecipe,
+    recipeStatus,
   };
 }

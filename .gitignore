@@ -40,3 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env*.local
+
+# Persona build artefacts — recipes (persona.json + sources.json) are canonical
+data/personas/*/documents/
+data/personas/*/index/

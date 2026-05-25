@@ -79,3 +79,30 @@ The shared path for adding evidence to a persona. Lives in
 `lib/persona-sources.ts`. It accepts URL links and local document content,
 writes markdown source documents, rebuilds that persona's index, and clears the
 in-memory corpus cache.
+
+## PersonaRecipe
+
+A portable, version-controlled bootstrap bundle for a generated persona.
+Commit `persona.json` + `sources.json`; treat `documents/` and `index/` as
+build artefacts.
+
+Layout:
+
+```
+data/personas/<persona-id>/
+├── persona.json     # identity + voice
+├── sources.json     # declarative evidence list (schema 1)
+├── documents/       # generated markdown (gitignored)
+└── index/           # generated embeddings + manifest (gitignored)
+```
+
+Domain module: `lib/persona-recipe.ts`. Install with:
+
+```bash
+bun run bootstrap-persona <persona-id>
+bun run bootstrap-persona --all
+```
+
+`RecipeInstall` fetches any missing URLs (skipping ones already present),
+writes source documents, and rebuilds the index. Use `--force` to re-fetch and
+`--index-only` to rebuild from existing documents.

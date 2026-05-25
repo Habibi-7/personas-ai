@@ -57,6 +57,34 @@ from those sources.
 Everything you create stays in your local clone. You can edit or delete personas
 from the UI.
 
+## Sharing Personas (Recipes)
+
+Generated personas can be shared as **recipes**: `persona.json` plus
+`sources.json`. Documents and indexes are build artefacts and stay out of git.
+
+```
+data/personas/<persona-id>/
+├── persona.json
+├── sources.json
+├── documents/    # generated
+└── index/        # generated
+```
+
+After cloning, bootstrap any bundled recipe:
+
+```bash
+bun run bootstrap-persona naval-ravikant
+bun run bootstrap-persona --all
+```
+
+Flags:
+
+- `--force` — re-fetch URLs even when documents already exist
+- `--index-only` — rebuild embeddings from existing documents without fetching
+
+Naval Ravikant ships as a recipe. Paul Graham remains the bundled default under
+`data/essays/` and is built with `bun run ingest`.
+
 ## Credits
 
 Inspired by [Nozomio Labs](https://github.com/nozomio-labs), which prototyped the original Paul Graham essay agent concept. This project re-implements the idea with a fully local stack.

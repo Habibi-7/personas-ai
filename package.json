@@ -11,7 +11,8 @@
     "test": "bun test",
     "scrape": "bun run scripts/scrape-essays.ts",
     "index": "bun run scripts/build-index.ts",
-    "ingest": "bun run scrape && bun run index"
+    "ingest": "bun run scrape && bun run index",
+    "bootstrap-persona": "bun run scripts/bootstrap-persona.ts"
   },
   "dependencies": {
     "@ai-sdk/gateway": "^3.0.120",
