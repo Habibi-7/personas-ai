@@ -29,7 +29,8 @@ bun run dev
 Add your own keys to `.env`:
 
 - `AI_GATEWAY_API_KEY` is required for chat.
-- `TAVILY_API_KEY` is optional for web search.
+- `TAVILY_API_KEY` is optional. Enables the in-chat web search tool and the
+  **Discover** button for auto-generating persona sources.
 
 ## Default Persona
 
@@ -40,6 +41,14 @@ His essays are already scraped and indexed.
 
 Click **Add Persona**, enter a name, and add sources. Sources can be URLs,
 uploaded files, or pasted text.
+
+### Auto-discover sources (Tavily)
+
+Click **Discover** in the Add Persona panel to pull up to 50 candidate URLs via
+Tavily. Review the list, uncheck anything unwanted, add to source links, then
+build as normal. Video hosts are filtered. Requires `TAVILY_API_KEY`.
+
+### Build pipeline
 
 When you add a persona, the app turns sources into clean markdown, breaks them
 into searchable chunks, builds local embeddings, and then lets the chat answer
