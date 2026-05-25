@@ -23,6 +23,7 @@ import {
   Trash2Icon,
   UploadIcon,
   SquareIcon,
+  SparklesIcon,
 } from "lucide-react";
 import { DEFAULT_MODEL, type SupportedModel } from "@/lib/constants";
 import Image from "next/image";
@@ -55,6 +56,13 @@ type SourceDocumentDraft = {
   title?: string;
   content: string;
   url?: string;
+};
+
+type DiscoveredSource = {
+  title: string;
+  url: string;
+  snippet: string;
+  query: string;
 };
 
 const fallbackPersona: PersonaSummary = {
@@ -466,6 +474,10 @@ function AddPersonaPanel({
   const [documentTitle, setDocumentTitle] = useState("");
   const [documentText, setDocumentText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+  const [discoveredSources, setDiscoveredSources] = useState<DiscoveredSource[]>([]);
+  const [selectedDiscoveredUrls, setSelectedDiscoveredUrls] = useState<Set<string>>(new Set());
+  const [isDiscovering, setIsDiscovering] = useState(false);
+  const [discoverError, setDiscoverError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -477,7 +489,65 @@ function AddPersonaPanel({
     setDocumentTitle("");
     setDocumentText("");
     setFiles([]);
+    setDiscoveredSources([]);
+    setSelectedDiscoveredUrls(new Set());
+    setDiscoverError(null);
+    setIsDiscovering(false);
   }, [isOpen, mode, persona]);
+
+  const handleDiscover = async () => {
+    setDiscoverError(null);
+    if (!name.trim()) {
+      setDiscoverError("Add a name first to auto-discover sources.");
+      return;
+    }
+    setIsDiscovering(true);
+    try {
+      const res = await fetch("/api/personas/discover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name.trim(), description: description.trim() || undefined, maxResults: 50 }),
+      });
+      const data = await res.json() as { sources?: DiscoveredSource[]; error?: string; errors?: string[] };
+      if (!res.ok) {
+        throw new Error(data.error || "Discovery failed.");
+      }
+      const sources = data.sources ?? [];
+      setDiscoveredSources(sources);
+      setSelectedDiscoveredUrls(new Set(sources.map((source) => source.url)));
+      if (sources.length === 0) {
+        setDiscoverError("No sources found. Try refining the name or description.");
+      }
+    } catch (error) {
+      setDiscoverError(error instanceof Error ? error.message : "Discovery failed.");
+    } finally {
+      setIsDiscovering(false);
+    }
+  };
+
+  const toggleDiscoveredUrl = (url: string) => {
+    setSelectedDiscoveredUrls((current) => {
+      const next = new Set(current);
+      if (next.has(url)) next.delete(url);
+      else next.add(url);
+      return next;
+    });
+  };
+
+  const addDiscoveredToLinks = () => {
+    if (selectedDiscoveredUrls.size === 0) return;
+    const existing = new Set(
+      linksText.split(/\r?\n/).map((line) => line.trim()).filter(Boolean)
+    );
+    const additions = discoveredSources
+      .map((source) => source.url)
+      .filter((url) => selectedDiscoveredUrls.has(url) && !existing.has(url));
+    if (additions.length === 0) return;
+    const prefix = linksText.trim().length > 0 ? `${linksText.replace(/\s+$/, "")}\n` : "";
+    setLinksText(`${prefix}${additions.join("\n")}\n`);
+    setDiscoveredSources([]);
+    setSelectedDiscoveredUrls(new Set());
+  };
 
   if (!isOpen) return null;
 
@@ -554,6 +624,105 @@ function AddPersonaPanel({
             className="w-full border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-[2px] focus-visible:ring-ring/50"
           />
         </label>
+
+        <div className="space-y-2 border border-border p-3">
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <p className="text-sm font-medium">Auto-discover sources</p>
+              <p className="text-xs text-muted-foreground">
+                Tavily web search for primary sources about this persona. Up to 50 URLs. Video sites are filtered.
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleDiscover}
+              disabled={isDiscovering || isCreating || !name.trim()}
+            >
+              {isDiscovering ? (
+                <Loader2Icon className="h-4 w-4 animate-spin" />
+              ) : (
+                <SparklesIcon className="h-4 w-4" />
+              )}
+              {isDiscovering ? "Searching..." : "Discover"}
+            </Button>
+          </div>
+          {discoverError && (
+            <p className="text-xs text-destructive">{discoverError}</p>
+          )}
+          {discoveredSources.length > 0 && (
+            <>
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>
+                  {selectedDiscoveredUrls.size} / {discoveredSources.length} selected
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    className="underline-offset-2 hover:underline"
+                    onClick={() =>
+                      setSelectedDiscoveredUrls(new Set(discoveredSources.map((source) => source.url)))
+                    }
+                  >
+                    Select all
+                  </button>
+                  <button
+                    type="button"
+                    className="underline-offset-2 hover:underline"
+                    onClick={() => setSelectedDiscoveredUrls(new Set())}
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+              <ul className="max-h-72 space-y-1 overflow-y-auto border border-border bg-muted/20 p-2">
+                {discoveredSources.map((source) => {
+                  const checked = selectedDiscoveredUrls.has(source.url);
+                  return (
+                    <li key={source.url} className="flex items-start gap-2 p-1.5 hover:bg-muted/40">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleDiscoveredUrl(source.url)}
+                        className="mt-1 shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <a
+                          href={source.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="block truncate text-xs font-medium hover:underline"
+                          title={source.url}
+                        >
+                          {source.title}
+                        </a>
+                        <p className="truncate text-[11px] text-muted-foreground" title={source.url}>
+                          {source.url}
+                        </p>
+                        {source.snippet && (
+                          <p className="mt-0.5 line-clamp-2 text-[11px] text-muted-foreground">
+                            {source.snippet}
+                          </p>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="flex justify-end">
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={addDiscoveredToLinks}
+                  disabled={selectedDiscoveredUrls.size === 0}
+                >
+                  Add {selectedDiscoveredUrls.size} to source links
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
 
         <label className="block space-y-1.5">
           <span className="text-sm font-medium">Source links</span>
