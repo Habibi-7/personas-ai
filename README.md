@@ -30,7 +30,7 @@ Add your own keys to `.env`:
 
 - `AI_GATEWAY_API_KEY` is required for chat.
 - `TAVILY_API_KEY` is optional. Enables the in-chat web search tool and the
-  **Discover** button for auto-generating persona sources.
+**Discover** button for auto-generating persona sources.
 
 ## Default Persona
 
@@ -82,8 +82,7 @@ Flags:
 - `--force` — re-fetch URLs even when documents already exist
 - `--index-only` — rebuild embeddings from existing documents without fetching
 
-Naval Ravikant ships as a recipe. Paul Graham remains the bundled default under
-`data/essays/` and is built with `bun run ingest`.
+
 
 ## Credits
 
