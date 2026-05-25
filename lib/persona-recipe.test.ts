@@ -8,6 +8,7 @@ import {
   installPersonaRecipe,
   parsePersonaRecipe,
   readPersonaRecipe,
+  syncPersonaRecipe,
   writePersonaRecipe,
 } from "./persona-recipe";
 import { personaPaths } from "./personas";
@@ -90,6 +91,66 @@ describe("getRecipeStatus", () => {
     });
 
     expect(await getRecipeStatus("demo-persona")).toBe("needs-bootstrap");
+  });
+});
+
+describe("syncPersonaRecipe", () => {
+  test("writes sources.json from ingest input and results", async () => {
+    const recipe = await syncPersonaRecipe("demo-persona", {
+      links: ["https://example.com/article"],
+      documents: [{ title: "Notes", content: "Pinned insight." }],
+      results: [
+        {
+          source: "https://example.com/article",
+          ok: true,
+          action: "fetched",
+          slug: "article",
+          title: "Article",
+        },
+        {
+          source: "Notes",
+          ok: true,
+          action: "written",
+          slug: "notes",
+          title: "Notes",
+        },
+      ],
+    });
+
+    expect(recipe.links).toHaveLength(1);
+    expect(recipe.links[0]).toEqual({
+      url: "https://example.com/article",
+      slug: "article",
+      title: "Article",
+    });
+    expect(recipe.documents).toHaveLength(1);
+    expect(recipe.documents?.[0].slug).toBe("notes");
+
+    const persisted = await readPersonaRecipe("demo-persona");
+    expect(persisted.links[0].slug).toBe("article");
+  });
+
+  test("merges new links into an existing recipe", async () => {
+    await writePersonaRecipe("demo-persona", {
+      schema: 1,
+      links: [{ url: "https://example.com/a", slug: "a", title: "A" }],
+    });
+
+    const recipe = await syncPersonaRecipe("demo-persona", {
+      links: ["https://example.com/b"],
+      results: [
+        {
+          source: "https://example.com/b",
+          ok: true,
+          action: "fetched",
+          slug: "b",
+          title: "B",
+        },
+      ],
+    });
+
+    expect(recipe.links).toHaveLength(2);
+    expect(recipe.links.map((link) => link.slug).sort()).toEqual(["a", "b"]);
   });
 });
 

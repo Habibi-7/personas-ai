@@ -106,3 +106,6 @@ bun run bootstrap-persona --all
 `RecipeInstall` fetches any missing URLs (skipping ones already present),
 writes source documents, and rebuilds the index. Use `--force` to re-fetch and
 `--index-only` to rebuild from existing documents.
+
+UI create/update calls `syncPersonaRecipe()` after ingest so every persona built
+in the app also gets a committed `sources.json`.

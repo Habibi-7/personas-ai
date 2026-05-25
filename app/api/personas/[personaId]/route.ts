@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { personaWritesDisabledResponse, personaWritesEnabled } from "@/lib/deployment";
 import { hasSourceInput, ingestPersonaSources, type SourceDocumentInput } from "@/lib/persona-sources";
+import { syncPersonaRecipe } from "@/lib/persona-recipe";
 import { DEFAULT_PERSONA_ID, deletePersona, getPersona, updatePersona } from "@/lib/personas";
 import { clearPersonaCorpus } from "@/lib/persona-corpus";
 
@@ -50,8 +51,16 @@ export async function PATCH(req: Request, context: PersonaRouteContext) {
         })
       : { results: [], index: null };
 
+    const recipe = hasSourceInput({ links: input.links, documents: input.documents })
+      ? await syncPersonaRecipe(persona.id, {
+          links: input.links,
+          documents: input.documents,
+          results: sourceResult.results,
+        })
+      : null;
+
     clearPersonaCorpus(persona.id);
-    return NextResponse.json({ persona, ...sourceResult });
+    return NextResponse.json({ persona, ...sourceResult, recipe });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to update persona." },

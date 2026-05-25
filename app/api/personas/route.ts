@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { personaWritesDisabledResponse, personaWritesEnabled } from "@/lib/deployment";
 import { hasSourceInput, ingestPersonaSources, type SourceDocumentInput } from "@/lib/persona-sources";
+import { syncPersonaRecipe } from "@/lib/persona-recipe";
 import { createPersona, listPersonas } from "@/lib/personas";
 
 export const runtime = "nodejs";
@@ -53,10 +54,17 @@ export async function POST(req: Request) {
       );
     }
 
+    const recipe = await syncPersonaRecipe(persona.id, {
+      links: input.links,
+      documents: input.documents,
+      results,
+    });
+
     return NextResponse.json({
       persona,
       results,
       index,
+      recipe,
     });
   } catch (error) {
     return NextResponse.json(

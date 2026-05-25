@@ -17,6 +17,8 @@ import {
   ingestPersonaSources,
   reindexPersonaCorpus,
   type SourceDocumentInput,
+  type SourceLinkInput,
+  type SourceResult,
 } from "@/lib/persona-sources";
 import { DEFAULT_PERSONA_ID, getPersona, personaPaths, personasRootDir } from "@/lib/personas";
 import { normalizeRecipeUrl } from "@/lib/recipe-url";
@@ -88,6 +90,41 @@ export function parsePersonaRecipe(raw: unknown): PersonaRecipe {
   }
 
   return { schema: PERSONA_RECIPE_SCHEMA, links, documents };
+}
+
+export async function readPersonaRecipeIfPresent(personaId: string): Promise<PersonaRecipe | null> {
+  const { sourcesFile } = recipePaths(personaId);
+  if (!existsSync(sourcesFile)) return null;
+  return readPersonaRecipe(personaId);
+}
+
+export type SyncPersonaRecipeInput = {
+  links?: Array<string | SourceLinkInput>;
+  documents?: SourceDocumentInput[];
+  results?: SourceResult[];
+};
+
+/** Merge ingest input + results into sources.json so UI-built personas are shareable. */
+export async function syncPersonaRecipe(
+  personaId: string,
+  input: SyncPersonaRecipeInput = {}
+): Promise<PersonaRecipe> {
+  const existing = await readPersonaRecipeIfPresent(personaId);
+  const links = mergeRecipeLinks(existing?.links ?? [], input.links ?? [], input.results ?? []);
+  const documents = mergeRecipeDocuments(
+    existing?.documents ?? [],
+    input.documents ?? [],
+    input.results ?? []
+  );
+
+  const recipe: PersonaRecipe = {
+    schema: PERSONA_RECIPE_SCHEMA,
+    links,
+    ...(documents.length > 0 ? { documents } : {}),
+  };
+
+  await writePersonaRecipe(personaId, recipe);
+  return recipe;
 }
 
 export async function readPersonaRecipe(personaId: string): Promise<PersonaRecipe> {
@@ -280,6 +317,103 @@ function dedupeLinks(links: RecipeLink[]): RecipeLink[] {
     out.push(link);
   }
   return out;
+}
+
+function normalizeIncomingLinks(links: Array<string | SourceLinkInput>): RecipeLink[] {
+  return links
+    .map((link) => (typeof link === "string" ? { url: link.trim() } : link))
+    .filter((link) => link.url.trim().length > 0)
+    .map((link) => ({
+      url: link.url.trim(),
+      slug: link.slug?.trim() || undefined,
+      title: link.title?.trim() || undefined,
+    }));
+}
+
+function mergeRecipeLinks(
+  existing: RecipeLink[],
+  incoming: Array<string | SourceLinkInput>,
+  results: SourceResult[]
+): RecipeLink[] {
+  const byUrl = new Map<string, RecipeLink>();
+
+  for (const link of existing) {
+    byUrl.set(normalizeRecipeUrl(link.url), { ...link });
+  }
+
+  for (const link of normalizeIncomingLinks(incoming)) {
+    const key = normalizeRecipeUrl(link.url);
+    byUrl.set(key, { ...byUrl.get(key), ...link });
+  }
+
+  for (const result of results) {
+    if (!result.ok || !result.slug || !isHttpSource(result.source)) continue;
+    const key = normalizeRecipeUrl(result.source);
+    const current = byUrl.get(key) ?? { url: result.source };
+    byUrl.set(key, {
+      ...current,
+      url: result.source,
+      slug: result.slug,
+      title: result.title ?? current.title,
+    });
+  }
+
+  return dedupeLinks([...byUrl.values()]);
+}
+
+function mergeRecipeDocuments(
+  existing: SourceDocumentInput[],
+  incoming: SourceDocumentInput[],
+  results: SourceResult[]
+): SourceDocumentInput[] {
+  const byKey = new Map<string, SourceDocumentInput>();
+
+  for (const document of [...existing, ...incoming]) {
+    byKey.set(recipeDocumentKey(document), normalizeRecipeDocument(document));
+  }
+
+  for (const result of results) {
+    if (!result.ok || result.action !== "written" || !result.slug) continue;
+    const match = [...byKey.values()].find((document) => documentMatchesResult(document, result));
+    if (!match) continue;
+    const key = recipeDocumentKey(match);
+    byKey.set(key, {
+      ...match,
+      slug: result.slug,
+      title: result.title ?? match.title,
+      url: match.url || `local:${result.slug}`,
+    });
+  }
+
+  return [...byKey.values()];
+}
+
+function normalizeRecipeDocument(document: SourceDocumentInput): SourceDocumentInput {
+  return {
+    title: document.title?.trim() || undefined,
+    content: document.content.trim(),
+    url: document.url?.trim() || undefined,
+    slug: document.slug?.trim() || undefined,
+  };
+}
+
+function recipeDocumentKey(document: SourceDocumentInput): string {
+  if (document.slug) return `slug:${document.slug}`;
+  if (document.url) return `url:${document.url}`;
+  if (document.title) return `title:${document.title}`;
+  return `content:${document.content.slice(0, 120)}`;
+}
+
+function documentMatchesResult(document: SourceDocumentInput, result: SourceResult): boolean {
+  if (document.url && document.url === result.source) return true;
+  if (document.title && document.title === result.source) return true;
+  if (!document.url && document.title === result.source) return true;
+  if (document.slug && result.slug && document.slug === result.slug) return true;
+  return false;
+}
+
+function isHttpSource(source: string): boolean {
+  return /^https?:\/\//i.test(source);
 }
 
 export { normalizeRecipeUrl } from "@/lib/recipe-url";

@@ -51,8 +51,8 @@ build as normal. Video hosts are filtered. Requires `TAVILY_API_KEY`.
 ### Build pipeline
 
 When you add a persona, the app turns sources into clean markdown, breaks them
-into searchable chunks, builds local embeddings, and then lets the chat answer
-from those sources.
+into searchable chunks, builds local embeddings, and writes `sources.json` so
+the persona can be shared via git and bootstrapped on other machines.
 
 Everything you create stays in your local clone. You can edit or delete personas
 from the UI.
